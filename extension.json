@@ -1,16 +1,16 @@
 {
-	"name": "BoilerPlate",
+	"name": "BlueSpiceUpgradeHelper",
 	"version": "0.0.0",
 	"author": [
-		"Your Name"
+		"Leonid Verhovskij"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:BoilerPlate",
 	"descriptionmsg": "boilerplate-desc",
 	"license-name": "MIT",
 	"type": "other",
 	"AutoloadClasses": {
-		"MediaWiki\\Extension\\BoilerPlate\\Hooks": "BoilerPlate.hooks.php",
-		"MediaWiki\\Extension\\BoilerPlate\\SpecialHelloWorld": "specials/SpecialHelloWorld.php"
+		"MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks": "BlueSpiceUpgradeHelper.hooks.php",
+		"MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper": "specials/SpecialBlueSpiceUpgradeHelper.php"
 	},
 	"ConfigRegistry": {
 		"boilerplate": "GlobalVarConfig::newInstance"
@@ -22,26 +22,21 @@
 		}
 	},
 	"ExtensionMessagesFiles": {
-		"BoilerPlateAlias": "BoilerPlate.i18n.alias.php"
-	},
-	"Hooks": {
-		"NameOfHook": [
-			"MediaWiki\\Extension\\BoilerPlate\\Hooks::onNameOfHook"
-		]
+		"BlueSpiceUpgradeHelperAlias": "BlueSpiceUpgradeHelper.i18n.alias.php"
 	},
 	"MessagesDirs": {
-		"BoilerPlate": [
+		"BlueSpiceUpgradeHelper": [
 			"i18n"
 		]
 	},
 	"ResourceModules": {
-		"ext.boilerPlate.foo": {
+		"ext.blueSpiceUpgradeHelper.foo": {
 			"scripts": [
-				"ext.boilerPlate.js",
-				"ext.boilerPlate.foo.js"
+				"ext.blueSpiceUpgradeHelper.js",
+				"ext.blueSpiceUpgradeHelper.foo.js"
 			],
 			"styles": [
-				"ext.boilerPlate.foo.css"
+				"ext.blueSpiceUpgradeHelper.foo.css"
 			],
 			"messages": [],
 			"dependencies": []
@@ -49,10 +44,10 @@
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "modules",
-		"remoteExtPath": "BoilerPlate/modules"
+		"remoteExtPath": "BlueSpiceUpgradeHelper/modules"
 	},
 	"SpecialPages": {
-		"HelloWorld": "MediaWiki\\Extension\\BoilerPlate\\SpecialHelloWorld"
+		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper"
 	},
 	"manifest_version": 2
 }
