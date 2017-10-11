@@ -21,10 +21,10 @@ class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
 		if ( empty( getenv( 'BLUESPICE_CONFIG_PATH' ) ) ||
 		  empty( getenv( 'BLUESPICE_PRO_KEY_FILE' ) ) ) {
 
-			putenv( "BLUESPICE_CONFIG_PATH=/etc/bluespice/" );
+			putenv( "BLUESPICE_CONFIG_PATH=/etc/bluespice" );
 			putenv( "BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt" );
 		}
-		return getenv( 'BLUESPICE_CONFIG_PATH' ) . getenv( 'BLUESPICE_PRO_KEY_FILE' );
+		return getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . getenv( 'BLUESPICE_PRO_KEY_FILE' );
 	}
 
 	public function __construct() {
@@ -56,7 +56,7 @@ class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
 
 		$out->addHelpLink( 'How to buy BlueSpice Pro' );
 
-		if(empty(file_get_contents( $this->filePath ))){
+		if ( empty( file_get_contents( $this->filePath ) ) ) {
 			$out->addWikiMsg( 'bs-upgrade-helper-intro' );
 		}
 
@@ -68,6 +68,18 @@ class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
 			]
 		];
 
+		if ( !empty( file_get_contents( $this->filePath ) ) ) {
+			$formDescriptor[ 'upgrade' ] = array(
+				'type' => 'submit',
+				'buttonlabel' => $this->msg( 'bs-upgrade-helper-upgrade' ),
+			);
+		}
+
+		$formDescriptor[ 'downgrade' ] = array(
+			'type' => 'submit',
+			'buttonlabel' => $this->msg( 'bs-upgrade-helper-downgrade' ),
+		);
+
 		// $htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'testform' );
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'tokenform' );
 
@@ -76,49 +88,24 @@ class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
 		$htmlForm->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper', 'processInput' ] );
 
 		$htmlForm->show();
-
-		if(!empty(file_get_contents( $this->filePath ))){
-			// $htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'testform' );
-			$htmlFormUpgrade = HTMLForm::factory( 'ooui', [], $this->getContext(), 'upgradeform' );
-
-			$htmlFormUpgrade->setSubmitText( wfMessage( 'bs-upgrade-helper-upgrade' )->text() );
-			$htmlFormUpgrade->setAction( $this->getPageTitle( $sub )->getLocalUrl() );
-			$htmlFormUpgrade->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper', 'upgrade' ] );
-
-			$htmlFormUpgrade->show();
-		}
-
-
-		// $htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'testform' );
-		$htmlFormDowngrade = HTMLForm::factory( 'ooui', [], $this->getContext(), 'downgradeform' );
-
-		$htmlFormDowngrade->setSubmitText( wfMessage( 'bs-upgrade-helper-downgrade' )->text() );
-		$htmlFormDowngrade->setAction( $this->getPageTitle( $sub )->getLocalUrl() );
-		$htmlFormDowngrade->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper', 'downgrade' ] );
-
-		$htmlFormDowngrade->show();
 	}
 
 	static function processInput( $formData ) {
-		file_put_contents( self::tokenFilePath(), $formData[ 'bs_upgrade_token' ]);
-
-		return false;
-	}
-
-	static function upgrade( $formData ) {
-		$upgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "upgrade.task";
-		if ( file_exists( $upgradeFilePath ) ) {
-			unlink( $upgradeFilePath );
+		if ( !empty( $formData[ "upgrade" ] ) && $formData[ "upgrade" ] ) {
+			$upgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
+			if ( file_exists( $upgradeFilePath ) ) {
+				unlink( $upgradeFilePath );
+			}
+			file_put_contents( $upgradeFilePath, "" );
+		} else if ( !empty( $formData[ "downgrade" ] ) && $formData[ "downgrade" ] ) {
+			$downgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "downgrade.task";
+			if ( file_exists( $downgradeFilePath ) ) {
+				unlink( $downgradeFilePath );
+			}
+			file_put_contents( $downgradeFilePath, "" );
 		}
-		file_put_contents( $upgradeFilePath, "" );
-	}
+		file_put_contents( self::tokenFilePath(), $formData[ 'bs_upgrade_token' ] );
 
-	static function downgrade( $formData ) {
-		$downgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "downgrade.task";
-		if ( file_exists( $downgradeFilePath ) ) {
-			unlink( $downgradeFilePath );
-		}
-		file_put_contents( $downgradeFilePath, "" );
 		return false;
 	}
 

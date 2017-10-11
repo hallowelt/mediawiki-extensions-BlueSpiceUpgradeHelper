@@ -49,5 +49,5 @@
 	"SpecialPages": {
 		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper"
 	},
-	"manifest_version": 2
+	"manifest_version": 1
 }
