@@ -49,5 +49,6 @@
 	"SpecialPages": {
 		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper"
 	},
+	"load_composer_autoloader": true,
 	"manifest_version": 1
 }

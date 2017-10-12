@@ -11,5 +11,6 @@
 	"bs-upgrade-helper-upgrade": "Upgrade",
 	"bs-upgrade-helper-downgrade": "Downgrade",
 	"bs-upgrade-helper-": "Save token",
-	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly."
+	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly.",
+	"bluespiceupgradehelper": "BlueSpice upgrade helper"
 }

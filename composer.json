@@ -11,7 +11,8 @@
 		}
 	],
 	"require": {
-		"composer/installers": "*"
+		"composer/installers": "*",
+		"lcobucci/jwt": "^3.2"
 	},
 	"require-dev": {
 		"jakub-onderka/php-parallel-lint": "0.9.2",
