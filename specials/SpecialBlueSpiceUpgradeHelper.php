@@ -10,11 +10,16 @@
 namespace MediaWiki\Extension\BlueSpiceUpgradeHelper;
 
 use HTMLForm;
-use SpecialPage;
+use BsSpecialPage;
 
-class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
+class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
 
 	protected $filePath = "";
+
+	public function __construct() {
+		$this->filePath = self::tokenFilePath();
+		parent::__construct( 'BlueSpiceUpgradeHelper', 'wikiadmin' );
+	}
 
 	static function tokenFilePath() {
 		//$BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE
@@ -25,14 +30,6 @@ class SpecialBlueSpiceUpgradeHelper extends SpecialPage {
 			putenv( "BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt" );
 		}
 		return getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . getenv( 'BLUESPICE_PRO_KEY_FILE' );
-	}
-
-	public function __construct() {
-		parent::__construct( 'BlueSpiceUpgradeHelper' );
-
-
-
-		$this->filePath = self::tokenFilePath();
 	}
 
 	/**
