@@ -1,17 +1,13 @@
 {
 	"name": "BlueSpiceUpgradeHelper",
-	"version": "0.0.0",
+	"version": "3.0.0-alpha",
 	"author": [
 		"Leonid Verhovskij"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:BoilerPlate",
-	"descriptionmsg": "boilerplate-desc",
+	"descriptionmsg": "bs-upgrade-helper-desc",
 	"license-name": "MIT",
 	"type": "other",
-	"AutoloadClasses": {
-		"MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks": "BlueSpiceUpgradeHelper.hooks.php",
-		"MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper": "specials/SpecialBlueSpiceUpgradeHelper.php"
-	},
 	"ConfigRegistry": {
 		"boilerplate": "GlobalVarConfig::newInstance"
 	},
@@ -30,7 +26,7 @@
 		]
 	},
 	"ResourceModules": {
-		"ext.blueSpiceUpgradeHelper.foo": {
+		"ext.blueSpiceUpgradeHelper.base": {
 			"scripts": [
 				"ext.blueSpiceUpgradeHelper.js",
 				"ext.blueSpiceUpgradeHelper.foo.js"
@@ -42,12 +38,22 @@
 			"dependencies": []
 		}
 	},
+	"callback": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onRegistration",
+	"Hooks": {
+		"BSWikiAdminMenuItems": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBSWikiAdminMenuItems",
+		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay"
+	},
+	"GroupPermissions": {
+		"sysop": {
+			"bluespice-upgradehelper-viewspecialpage": true
+		}
+	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "modules",
 		"remoteExtPath": "BlueSpiceUpgradeHelper/modules"
 	},
 	"SpecialPages": {
-		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper"
+		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
 	},
 	"load_composer_autoloader": true,
 	"manifest_version": 1

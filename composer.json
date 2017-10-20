@@ -19,6 +19,11 @@
 		"mediawiki/mediawiki-codesniffer": "13.0.0",
 		"jakub-onderka/php-console-highlighter": "0.3.2"
 	},
+	"autoload": {
+		"psr-4": {
+			"MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\": "src/"
+		}
+	},
 	"scripts": {
 		"fix": "phpcbf",
 		"test": [

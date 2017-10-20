@@ -7,20 +7,20 @@
  * @ingroup Extensions
  */
 
-namespace MediaWiki\Extension\BlueSpiceUpgradeHelper;
+namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials;
 
 use HTMLForm;
 use BsSpecialPage;
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\ValidationData;
+use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 
-class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
+class UpgradeHelper extends BsSpecialPage {
 
 	protected $filePath = "";
 
 	public function __construct() {
 		$this->filePath = self::tokenFilePath();
-		parent::__construct( 'BlueSpiceUpgradeHelper', 'wikiadmin' );
+		parent::__construct( 'BlueSpiceUpgradeHelper', Hooks\Main::$permissionViewSpecial );
 	}
 
 	static function tokenFilePath() {
@@ -41,6 +41,9 @@ class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
 	 *  [[Special:HelloWorld/subpage]].
 	 */
 	public function execute( $sub ) {
+		parent::execute( $sub );
+
+		$templateParser = new \TemplateParser( __DIR__ . '/../../templates' );
 
 		$this->setHeaders();
 
@@ -63,14 +66,60 @@ class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
 			$maxUser = $token->getClaim( 'max_user' );
 			$arrProductData = explode( "/", $token->getClaim( 'product_name' ) );
 
-			$out->addHtml( "<h3>Token data</h3>" );
-			$out->addWikiText( "Created: " . date( 'd.m.Y', $nbf ) ); //issue timestamp
-			$out->addWikiText( "Expire at: " . date( 'd.m.Y', $exp ) ); //expire timestamp
-			$out->addWikiText( "User allowed: " . $maxUser ); //expire timestamp
+			/*
+			  $out->addHtml( "<h3>Token data</h3>" );
+			  $out->addWikiText( "Created: " . date( 'd.m.Y', $nbf ) ); //issue timestamp
+			  $out->addWikiText( "Expire at: " . date( 'd.m.Y', $exp ) ); //expire timestamp
+			  $out->addWikiText( "User allowed: " . $maxUser ); //expire timestamp
 
-			$out->addWikiText( "System: " . $arrProductData[ 0 ] ); //expire timestamp
-			$out->addWikiText( "Version: " . $arrProductData[ 1 ] ); //expire timestamp
-			$out->addWikiText( "Package: " . trim( ucwords( implode( " ", explode( "_", $arrProductData[ 2 ] ) ) ), ".zip" ) ); //expire timestamp
+			  $out->addWikiText( "System: " . $arrProductData[ 0 ] ); //expire timestamp
+			  $out->addWikiText( "Version: " . $arrProductData[ 1 ] ); //expire timestamp
+			  $out->addWikiText( "Package: " . trim( ucwords( implode( " ", explode( "_", $arrProductData[ 2 ] ) ) ), ".zip" ) );
+			 *
+			 */
+
+			$package = trim( ucwords( implode( " ", explode( "_", $arrProductData[ 2 ] ) ) ), ".zip" );
+			$system = $arrProductData[ 0 ];
+			$validFrom = date( 'd.m.Y', $nbf );
+			$validUntil = date( 'd.m.Y', $exp );
+			$usersAllowed = ($maxUser == 0) ? "unlimited" : $maxUser;
+
+			global $bsgBlueSpiceExtInfo, $IP;
+
+			$currentPackage = "";
+			if ( !empty( getenv( "BLUESPICE_FREE_FILE" ) ) && file_exists( "$IP/" . getenv( "BLUESPICE_FREE_FILE" ) ) ) {
+				$currentPackageTemp = basename( file_get_contents( "$IP/" . getenv( "BLUESPICE_FREE_FILE" ) ), ".zip" );
+				$currentPackage = ucwords( implode( " ", explode( "_", $currentPackageTemp ) ) );
+			} else {
+				$currentPackage = "Free";
+			}
+			$out->addHTML( $templateParser->processTemplate(
+				'VersionOverview', [
+				  "version_head" => "Current version",
+				  "version_package" => $currentPackage,
+				  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
+				  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
+				  "version_pro" => (strpos( $currentPackage, "Pro" ) !== FALSE),
+				  "version_valid_from" => $validFrom,
+				  "version_valid_until" => $validUntil,
+				  "version_user_allowed" => $usersAllowed
+				]
+			) );
+
+			if ( $currentPackage !== $package && strtotime( $validFrom ) <= time() && time() <= strtotime( $validUntil ) + 3600 * 24 ) {
+				$out->addHTML( $templateParser->processTemplate(
+					'VersionOverview', [
+					  "version_head" => "Available Version for Upgrade",
+					  "version_package" => $package,
+					  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
+					  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
+					  "version_pro" => true,
+					  "version_valid_from" => $validFrom,
+					  "version_valid_until" => $validUntil,
+					  "version_user_allowed" => $usersAllowed
+					]
+				) );
+			}
 		}
 
 		$out->addHelpLink( 'How to buy BlueSpice Pro' );
@@ -84,7 +133,7 @@ class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
 				'class' => 'HTMLTextField',
 				'label' => $this->msg( 'bs-upgrade-helper-token-label' ),
 				'default' => file_exists( $this->filePath ) ? file_get_contents( $this->filePath ) : "",
-				'validation-callback' => [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper', 'validateTokenField' ],
+				'validation-callback' => [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper', 'validateTokenField' ],
 			]
 		];
 
@@ -119,9 +168,9 @@ class SpecialBlueSpiceUpgradeHelper extends BsSpecialPage {
 
 		$htmlForm->setSubmitText( wfMessage( 'bs-upgrade-helper-save' )->text() );
 		$htmlForm->setAction( $this->getPageTitle( $sub )->getLocalUrl() );
-		$htmlForm->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\SpecialBlueSpiceUpgradeHelper', 'processInput' ] );
+		$htmlForm->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper', 'processInput' ] );
 
-		$htmlForm->show();
+		//$htmlForm->show();
 	}
 
 	static function base64url_encode( $data ) {
