@@ -1,0 +1,36 @@
+.version-overview{
+	border:1px solid lightsteelblue;
+	padding:5px;
+	width:30em;
+	margin:0 0 0.5em 1em;
+	font-size:85%;
+	background:#F9F9F9;
+
+	float: left;
+}
+
+.version-head{
+	background:lightsteelblue;
+	margin-bottom:2px;
+	text-align:center;
+	font-size:118%;
+	font-weight:bold;
+	width:100%;
+}
+
+.version-body{
+	display: table;
+}
+
+.version-body > div{
+	display:table-row;
+}
+
+.version-body > div > span{
+	width: 9em;
+	display:table-cell;
+}
+
+.version-body .label{
+	font-weight: bold;
+}

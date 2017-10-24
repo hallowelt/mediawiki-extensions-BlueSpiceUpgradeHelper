@@ -1,0 +1,14 @@
+{
+  "name": "socket-chat-example",
+  "version": "0.0.1",
+  "description": "my first socket.io app",
+  "dependencies": {
+    "express": "^4.15.2",
+    "file-extension": "^3.1.2",
+    "inotify": "^1.4.2",
+    "last-line": "0.0.3",
+    "socket.io": "^2.0.4",
+    "watch": "^1.0.2",
+    "watchr": "^3.0.1"
+  }
+}

@@ -28,11 +28,10 @@
 	"ResourceModules": {
 		"ext.blueSpiceUpgradeHelper.base": {
 			"scripts": [
-				"ext.blueSpiceUpgradeHelper.js",
-				"ext.blueSpiceUpgradeHelper.foo.js"
+				"ext.blueSpiceUpgradeHelper.js"
 			],
 			"styles": [
-				"ext.blueSpiceUpgradeHelper.foo.css"
+				"ext.blueSpiceUpgradeHelper.css"
 			],
 			"messages": [],
 			"dependencies": []
