@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ ! -f $BLUESPICE_FREE_BACKUPFILE ]; then
+  cd $BLUESPICE_WEBROOT
+  zip -r $BLUESPICE_FREE_BACKUPFILE ./*
+fi

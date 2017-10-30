@@ -49,6 +49,8 @@ class UpgradeHelper extends BsSpecialPage {
 
 		$out = $this->getOutput();
 
+		$arrCurrentData = self::readManifest();
+
 		//$out->setPageTitle( $this->msg( 'bs-upgrade-helper-token-label' ) );
 
 
@@ -98,7 +100,7 @@ class UpgradeHelper extends BsSpecialPage {
 				  "version_head" => "Current version",
 				  "version_package" => $currentPackage,
 				  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-				  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
+				  "version_system" => ucwords( (empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" ) ),
 				  "version_pro" => (strpos( $currentPackage, "Pro" ) !== FALSE),
 				  "version_valid_from" => $validFrom,
 				  "version_valid_until" => $validUntil,
@@ -112,7 +114,7 @@ class UpgradeHelper extends BsSpecialPage {
 					  "version_head" => "Available Version for Upgrade",
 					  "version_package" => $package,
 					  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-					  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
+					  "version_system" => ucwords( (empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" ) ),
 					  "version_pro" => true,
 					  "version_valid_from" => $validFrom,
 					  "version_valid_until" => $validUntil,
@@ -171,6 +173,41 @@ class UpgradeHelper extends BsSpecialPage {
 		$htmlForm->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper', 'processInput' ] );
 
 		//$htmlForm->show();
+	}
+
+	static function readManifest() {
+		global $IP;
+		$filePath = $IP . "/BlueSpiceManifest.xml";
+		$arrRet = [];
+		if ( file_exists( $filePath ) ) {
+			$domDoc = new \DOMDocument;
+			$domDoc->load($filePath);
+			$domRoot = $domDoc->documentElement;
+			/*
+			  <manifest
+			  versionCode="2.27.3"
+			  versionName="v2.27.3"
+			  repository="https://github.com/hallowelt/mediawiki"
+			  branch="REL1_27_docker"
+			  package="BlueSpice Free Docker"
+			  system="docker"
+			  installLocation="/var/www/bluespice"
+			  configLocation="/etc/bluespice"
+			  dataLocation="/var/bluespice"
+			  solrLocation="/opt/bluespice"
+			  />
+			 */
+			$arrRet["versionCode"] = $domRoot->getAttribute("versionCode");
+			$arrRet["versionName"] = $domRoot->getAttribute("versionName");
+			$arrRet["repository"] = $domRoot->getAttribute("repository");
+			$arrRet["branch"] = $domRoot->getAttribute("branch");
+			$arrRet["package"] = $domRoot->getAttribute("package");
+			$arrRet["system"] = $domRoot->getAttribute("system");
+			$arrRet["installLocation"] = $domRoot->getAttribute("installLocation");
+			$arrRet["configLocation"] = $domRoot->getAttribute("configLocation");
+			$arrRet["dataLocation"] = $domRoot->getAttribute("dataLocation");
+			$arrRet["solrLocation"] = $domRoot->getAttribute("solrLocation");
+		}
 	}
 
 	static function base64url_encode( $data ) {
