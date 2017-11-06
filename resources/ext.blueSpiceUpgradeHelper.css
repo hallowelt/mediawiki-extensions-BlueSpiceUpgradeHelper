@@ -1,9 +1,8 @@
 .version-overview{
 	border:1px solid lightsteelblue;
 	padding:5px;
-	width:30em;
+	width:95%;
 	margin:0 0 0.5em 1em;
-	font-size:85%;
 	background:#F9F9F9;
 
 	float: left;
@@ -20,17 +19,48 @@
 
 .version-body{
 	display: table;
+	width: 100%;
 }
 
 .version-body > div{
+	width: 100%;
 	display:table-row;
 }
 
+.version-body > div:nth-child(2){
+	background-color: #e2e9f3;
+}
+
 .version-body > div > span{
-	width: 9em;
+	width: 50%;
 	display:table-cell;
 }
 
 .version-body .label{
 	font-weight: bold;
 }
+
+.token-button{
+	float: right;
+	margin-bottom: 10px;
+	margin-right: 17px;
+}
+
+.token-process{
+	position: absolute;
+	left: 20em;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 60em; /* Need a specific value to work */
+	border:1px solid lightsteelblue;
+	background:#F9F9F9;
+	padding:5px;
+	z-index: 100;
+}
+
+#token_input{
+	width: 95%;
+}
+
+#close_token_input{}

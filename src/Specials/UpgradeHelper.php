@@ -17,6 +17,20 @@ use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 class UpgradeHelper extends BsSpecialPage {
 
 	protected $filePath = "";
+	protected $manifestAttributes = [
+		"versionCode" => true,
+		"versionName" => true,
+		"repository" => true,
+		"branch" => true,
+		"package" => true,
+		"system" => true,
+		"installLocation" => false,
+		"configLocation" => false,
+		"dataLocation" => false,
+		"pro" => [
+			"convert" => "exists if yes"
+		]
+	];
 
 	public function __construct() {
 		$this->filePath = self::tokenFilePath();
@@ -49,7 +63,18 @@ class UpgradeHelper extends BsSpecialPage {
 
 		$out = $this->getOutput();
 
-		//$out->setPageTitle( $this->msg( 'bs-upgrade-helper-token-label' ) );
+		$currentVersionData = $this->readManifestFile();
+
+		$currentVersionData[ 'version_head' ] = "Current version";
+
+		$out->addHTML( $templateParser->processTemplate(
+			'TokenButton', []
+		) );
+		
+		$out->addHTML( $templateParser->processTemplate(
+			'VersionOverview', $currentVersionData
+		) );
+
 
 
 		if ( empty( $this->filePath ) ) {
@@ -93,18 +118,7 @@ class UpgradeHelper extends BsSpecialPage {
 			} else {
 				$currentPackage = "Free";
 			}
-			$out->addHTML( $templateParser->processTemplate(
-				'VersionOverview', [
-				  "version_head" => "Current version",
-				  "version_package" => $currentPackage,
-				  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-				  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
-				  "version_pro" => (strpos( $currentPackage, "Pro" ) !== FALSE),
-				  "version_valid_from" => $validFrom,
-				  "version_valid_until" => $validUntil,
-				  "version_user_allowed" => $usersAllowed
-				]
-			) );
+
 
 			if ( $currentPackage !== $package && strtotime( $validFrom ) <= time() && time() <= strtotime( $validUntil ) + 3600 * 24 ) {
 				$out->addHTML( $templateParser->processTemplate(
@@ -112,7 +126,7 @@ class UpgradeHelper extends BsSpecialPage {
 					  "version_head" => "Available Version for Upgrade",
 					  "version_package" => $package,
 					  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-					  "version_system" => ucwords((empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )),
+					  "version_system" => ucwords( (empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" )  ),
 					  "version_pro" => true,
 					  "version_valid_from" => $validFrom,
 					  "version_valid_until" => $validUntil,
@@ -225,6 +239,44 @@ class UpgradeHelper extends BsSpecialPage {
 
 	protected function getGroupName() {
 		return 'bluespice';
+	}
+
+	protected function getDefaultManifestPath() {
+		global $IP;
+		return $IP . "/BlueSpiceManifest.xml";
+	}
+
+	protected function readManifestFile( $path = null ) {
+		if ( empty( $path ) ) {
+			$path = $this->getDefaultManifestPath();
+		}
+		if ( file_exists( $path ) ) {
+			$domDoc = new \DOMDocument( '1.0', 'UTF-8' );
+			if ( !$domDoc->load( $path ) ) {
+				return false;
+			}
+			$domRoot = $domDoc->documentElement;
+
+			$aReturn = $this->parseAttributes( $domRoot );
+
+			return $aReturn;
+		}
+		return false;
+	}
+
+	protected function parseAttributes( $domRoot ) {
+		$aReturn = [];
+		foreach ( $this->manifestAttributes as $attribute => $required ) {
+			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
+				return false;
+			}
+			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
+				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			} else {
+				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
+			}
+		}
+		return $aReturn;
 	}
 
 }

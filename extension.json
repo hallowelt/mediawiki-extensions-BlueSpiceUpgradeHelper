@@ -48,8 +48,8 @@
 		}
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "modules",
-		"remoteExtPath": "BlueSpiceUpgradeHelper/modules"
+		"localBasePath": "resources",
+		"remoteExtPath": "BlueSpiceUpgradeHelper/resources"
 	},
 	"SpecialPages": {
 		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
