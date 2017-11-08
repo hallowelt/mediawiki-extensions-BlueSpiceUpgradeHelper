@@ -38,13 +38,27 @@ class SubscriptionManager extends \BSApiTasksBase {
 			return $oResponse;
 		}
 
-		$oResponse->payload = $this->parseToken($oTaskData->token);
+		$oResponse->payload[ 'token_data' ] = $this->parseToken( $oTaskData->token );
+
+		$client = new \GuzzleHttp\Client();
+		$res = $client->request( 'GET', 'https://selfservice.bluespice.com/frontend/info/docker/REL1_27/bluespice.zip', [
+			'headers' => [
+				'User-Agent' => 'bluespice-upgrade-helper/1.0',
+				'Accept' => 'application/json',
+				'Authorization' => "Bearer " . $oTaskData->token
+			]
+		  ] );
+
+		if ( $res->getStatusCode() == 200 ) {
+			$oResponse->payload[ 'response_data' ] = \GuzzleHttp\json_decode( $res->getBody() );
+		}
+
 		$oResponse->payload_count++;
 		$oResponse->success = true;
 		return $oResponse;
 	}
 
-	protected function parseToken($sToken) {
+	protected function parseToken( $sToken ) {
 		$token = (new Parser() )->parse( ( string ) $sToken ); // Parses from a string
 
 		return $token->getClaims();
