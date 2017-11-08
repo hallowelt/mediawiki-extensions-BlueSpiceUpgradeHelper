@@ -3,9 +3,9 @@
 		"authors": []
 	},
 	"bs-upgrade-helper-desc": "Special Page for upgrading bluespice to pro version.",
+	"apihelp-bs-subscription-manager-summary": "Provides common tasks for Subscription manager",
 	"prefs-bluespiceupgradehelper": "Subscription Manager",
 	"bs-bluespiceupgradehelper-show-menu-links": "Show in admin menu",
-	"bs-upgrade-helper-i18n-welcome": "Welcome to the localization file of the BoilerPlate extension.",
 	"bs-upgrade-helper-title": "Subscription manager",
 	"bs-upgrade-helper-intro": "Please save token to enable bluespice upgrade function",
 	"bs-upgrade-helper-token-label": "Token",

@@ -70,7 +70,7 @@ class UpgradeHelper extends BsSpecialPage {
 		$out->addHTML( $templateParser->processTemplate(
 			'TokenButton', []
 		) );
-		
+
 		$out->addHTML( $templateParser->processTemplate(
 			'VersionOverview', $currentVersionData
 		) );
@@ -265,6 +265,21 @@ class UpgradeHelper extends BsSpecialPage {
 	}
 
 	protected function parseAttributes( $domRoot ) {
+		$aReturn = [];
+		foreach ( $this->manifestAttributes as $attribute => $required ) {
+			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
+				return false;
+			}
+			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
+				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			} else {
+				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
+			}
+		}
+		return $aReturn;
+	}
+
+	public static function parseToken( $domRoot ) {
 		$aReturn = [];
 		foreach ( $this->manifestAttributes as $attribute => $required ) {
 			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {

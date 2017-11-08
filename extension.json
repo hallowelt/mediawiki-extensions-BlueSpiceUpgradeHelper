@@ -8,15 +8,6 @@
 	"descriptionmsg": "bs-upgrade-helper-desc",
 	"license-name": "MIT",
 	"type": "other",
-	"ConfigRegistry": {
-		"boilerplate": "GlobalVarConfig::newInstance"
-	},
-	"config": {
-		"BoilerPlateEnableFoo": {
-			"value": true,
-			"description": "Whether or not the foo feature is enabled."
-		}
-	},
 	"ExtensionMessagesFiles": {
 		"BlueSpiceUpgradeHelperAlias": "BlueSpiceUpgradeHelper.i18n.alias.php"
 	},
@@ -53,6 +44,9 @@
 	},
 	"SpecialPages": {
 		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
+	},
+	"APIModules": {
+		"bs-subscription-manager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Api\\SubscriptionManager"
 	},
 	"load_composer_autoloader": true,
 	"manifest_version": 1
