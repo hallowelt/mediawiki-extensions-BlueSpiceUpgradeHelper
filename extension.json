@@ -4,7 +4,7 @@
 	"author": [
 		"Leonid Verhovskij"
 	],
-	"url": "https://www.mediawiki.org/wiki/Extension:BoilerPlate",
+	"url": "https://www.mediawiki.org/wiki/Extension:BlueSpiceUpgradeHelper",
 	"descriptionmsg": "bs-upgrade-helper-desc",
 	"license-name": "MIT",
 	"type": "other",
@@ -43,7 +43,7 @@
 		"remoteExtPath": "BlueSpiceUpgradeHelper/resources"
 	},
 	"SpecialPages": {
-		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
+		"SubscriptionManager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
 	},
 	"APIModules": {
 		"bs-subscription-manager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Api\\SubscriptionManager"

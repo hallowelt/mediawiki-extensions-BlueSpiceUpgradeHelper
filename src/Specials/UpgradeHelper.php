@@ -34,7 +34,7 @@ class UpgradeHelper extends BsSpecialPage {
 
 	public function __construct() {
 		$this->filePath = self::tokenFilePath();
-		parent::__construct( 'BlueSpiceUpgradeHelper', Hooks\Main::$permissionViewSpecial );
+		parent::__construct( 'SubscriptionManager', Hooks\Main::$permissionViewSpecial );
 	}
 
 	static function tokenFilePath() {

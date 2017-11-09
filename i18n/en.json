@@ -16,5 +16,6 @@
 	"bs-upgrade-helper-token-button-label": "Save token",
 	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly.",
 	"action-bluespice-upgradehelper-viewspecialpage": "view special page \"Subscription manager\"",
-	"bluespiceupgradehelper": "Subscription manager"
+	"bluespiceupgradehelper": "Subscription manager",
+	"subscriptionmanager": "Subscription manager"
 }

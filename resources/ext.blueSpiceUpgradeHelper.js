@@ -1,14 +1,24 @@
 ( function ( mw, $ ) {
 	$( '#insert_token' ).click( function () {
-		console.log( 'clicked' );
 		$( '.token-process' ).show();
 	} );
 	$( '#close_token_input' ).click( function () {
-		console.log( 'clicked' );
 		$( '.token-process' ).hide();
 	} );
-	$('#token_input').on('input', function(){
+	$( '#token_input' ).on( 'input', function () {
 		//send data to api, return check result
-		console.log($('#token_input').val());
-	});
+		var api = new mw.Api();
+		var downloadToken = $( '#token_input' ).val();
+		api.postWithToken( 'csrf', {
+			action: 'bs-subscription-manager',
+			task: 'parsetoken',
+			taskData: JSON.stringify( { token: downloadToken } )
+		} ).done( function ( data ) {
+			console.log( data );
+		} ).fail( function ( data, response ) {
+			console.log( data );
+			console.log( response );
+		} );
+
+	} );
 }( mediaWiki, jQuery ) );

@@ -7,6 +7,7 @@ use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 
 class SubscriptionManager extends \BSApiTasksBase {
 
+	protected $url = 'https://selfservice.bluespice.com/frontend/info/docker/REL1_27/bluespice.zip';
 	protected $aTasks = array(
 		'parsetoken' => [
 			'examples' => [
@@ -40,21 +41,20 @@ class SubscriptionManager extends \BSApiTasksBase {
 
 		$oResponse->payload[ 'token_data' ] = $this->parseToken( $oTaskData->token );
 
-		$client = new \GuzzleHttp\Client();
-		$res = $client->request( 'GET', 'https://selfservice.bluespice.com/frontend/info/docker/REL1_27/bluespice.zip', [
-			'headers' => [
-				'User-Agent' => 'bluespice-upgrade-helper/1.0',
-				'Accept' => 'application/json',
-				'Authorization' => "Bearer " . $oTaskData->token
-			]
-		  ] );
+		$req = \MWHttpRequest::factory( $this->url );
+		$req->setHeader( 'Authorization', "Bearer " . $oTaskData->token );
+		$status = $req->execute();
 
-		if ( $res->getStatusCode() == 200 ) {
-			$oResponse->payload[ 'response_data' ] = \GuzzleHttp\json_decode( $res->getBody() );
+		if ( $status->isOK() ) {
+			$oResponse->payload[ 'response_data' ] = \FormatJson::decode( $req->getContent() );
+			$oResponse->payload_count++;
+			$oResponse->success = true;
+		} else {
+			$oResponse->payload[ 'response_data' ] = \FormatJson::decode( $req->getContent() );
+			$oResponse->success = false;
 		}
 
-		$oResponse->payload_count++;
-		$oResponse->success = true;
+
 		return $oResponse;
 	}
 
