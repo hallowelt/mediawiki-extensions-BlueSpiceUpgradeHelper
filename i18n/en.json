@@ -6,6 +6,7 @@
 	"apihelp-bs-subscription-manager-summary": "Provides common tasks for Subscription manager",
 	"prefs-bluespiceupgradehelper": "Subscription Manager",
 	"bs-bluespiceupgradehelper-show-menu-links": "Show in admin menu",
+	"bs-bluespiceupgradehelper-hint-active": "Show upgrade hint on start page",
 	"bs-upgrade-helper-title": "Subscription manager",
 	"bs-upgrade-helper-intro": "Please save token to enable bluespice upgrade function",
 	"bs-upgrade-helper-token-label": "Token",
@@ -15,6 +16,9 @@
 	"bs-upgrade-helper-": "Save token",
 	"bs-upgrade-helper-token-button-label": "Save token",
 	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly.",
+	"bs-bluespiceupgradehelper-hint": "To Upgrade your BlueSpice to pro, go to [Special:Subscription manager]",
+	"bs-bluespiceupgradehelper-closebutton": "Hide this message",
+	"bs-bluespiceupgradehelper-confirm": "Got it",
 	"action-bluespice-upgradehelper-viewspecialpage": "view special page \"Subscription manager\"",
 	"bluespiceupgradehelper": "Subscription manager",
 	"subscriptionmanager": "Subscription manager"

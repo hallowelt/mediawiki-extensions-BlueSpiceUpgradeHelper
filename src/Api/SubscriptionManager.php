@@ -22,13 +22,23 @@ class SubscriptionManager extends \BSApiTasksBase {
 					'required' => true
 				]
 			]
-		]
+		],
+		'disableHint' => [ ]
 	);
 
 	protected function getRequiredTaskPermissions() {
 		return array(
-			'parsetoken' => array( Hooks\Main::$permissionViewSpecial )
+			'parsetoken' => array( Hooks\Main::$permissionViewSpecial ),
+			'disableHint' => array( 'wikiadmin' )
 		);
+	}
+
+	protected function task_disableHint() {
+		$oReturn = $this->makeStandardReturn();
+		BsConfig::set( Hooks\Main::$configNameHint, false );
+		BsConfig::saveSettings();
+		$oReturn->success = true;
+		return $oReturn;
 	}
 
 	public function task_parsetoken( $oTaskData ) {

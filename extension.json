@@ -26,12 +26,23 @@
 			],
 			"messages": [],
 			"dependencies": []
+		},
+		"ext.blueSpiceUpgradeHelper.hint": {
+			"scripts": [
+				"ext.blueSpiceUpgradeHelper.hint.js"
+			],
+			"styles": [
+				"ext.blueSpiceUpgradeHelper.hint.css"
+			],
+			"messages": [],
+			"dependencies": []
 		}
 	},
 	"callback": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onRegistration",
 	"Hooks": {
 		"BSWikiAdminMenuItems": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBSWikiAdminMenuItems",
-		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay"
+		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay",
+		"SkinAfterContent": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onSkinAfterContent"
 	},
 	"GroupPermissions": {
 		"sysop": {
