@@ -11,7 +11,7 @@ mw.loader.using( 'ext.bluespice', function() {
 	}
 
 	if ( $.cookie( 'bs-bluespiceupgradehelper-hide' ) === 'true' ){
-		$('#bs-bluespiceprojectfeedbackhelperpanel').hide();
+		$('#bs-bluespiceupgradehelper').hide();
 	} else{
 		$('#bs-bluespiceupgradehelper-closebutton').click(function(){
 			if( confirm( $(this).attr('data-confirm-msg') ) ) {

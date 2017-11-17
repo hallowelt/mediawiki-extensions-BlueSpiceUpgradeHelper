@@ -18,12 +18,9 @@
 	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly.",
 	"bs-bluespiceupgradehelper-hint": "To Upgrade your BlueSpice to pro, go to [Special:Subscription manager]",
 	"bs-bluespiceupgradehelper-closebutton": "Hide this message",
-	"bs-bluespiceupgradehelper-confirm": "The Message will be hidden for one week and can be activated in globals settings again.",
+	"bs-bluespiceupgradehelper-confirm": "Got it",
 	"action-bluespice-upgradehelper-viewspecialpage": "view special page \"Subscription manager\"",
 	"bluespiceupgradehelper": "Subscription manager",
 	"subscriptionmanager": "Subscription manager",
-	"upgrade-invite-head": "Ganz einfach upgraden zum professionellen Unternehmenswiki!",
-	"upgrade-invite": "Bauen Sie Ihr BlueSpice Wiki zu einem BlueSpice pro aus und nutzen Sie den vollen Funktionsumfang. Das Experten-Team des Softwareherstellers unterstützt Sie darüber hinaus durch seinen kompetenten Produkt- und Entwicklungssupport.",
-	"upgrade-invite-second": "So managen Sie Ihr Firmenwissen und koordinieren Ihre Firmenprozesse – zentral, kollaborativ und immer aktuell!",
-	"upgrade-invite-final": "Mehr Informationen und Upgrade"
+	"upgrade_invite": "Ganz einfach upgraden zum professionellen Unternehmenswiki! (Überschrift)\nBauen Sie Ihr BlueSpice Wiki zu einem BlueSpice pro aus und nutzen Sie den vollen Funktionsumfang. Das Experten-Team des Softwareherstellers unterstützt Sie darüber hinaus durch seinen kompetenten Produkt- und Entwicklungssupport.\nSo managen Sie Ihr Firmenwissen und koordinieren Ihre Firmenprozesse – zentral, kollaborativ und immer aktuell!\nGleich upgraden (Button)"
 }

@@ -25,7 +25,7 @@ class Main {
 		$out->addModules( "ext.blueSpiceUpgradeHelper.base" );
 
 		$bActive = \BsConfig::get(
-			'MW::BlueSpiceProjectFeedbackHelper::Active'
+			self::$configNameHint
 		);
 
 		if ( $skin->getUser()->isAllowed( 'wikiadmin' ) && $bActive ) {
@@ -40,14 +40,17 @@ class Main {
 	 * @param Skin $oSkin
 	 * @return boolean
 	 */
-	public static function onSkinAfterContent( &$sData, $oSkin ) {
-		if ( !$oSkin->getUser()->isAllowed('wikiadmin') ) {
-			return true;
-		}
-		if( class_exists( "\ViewStateBarTopElement" )){
+	public static function onSkinAfterContent( &$sData, \Skin $oSkin ) {
+		$bActive = \BsConfig::get(
+			self::$configNameHint
+		);
+		$cVar = filter_input(INPUT_COOKIE, 'bs-bluespiceupgradehelper-hide', FILTER_VALIDATE_BOOLEAN);
+		$status = (!empty( $cVar )) ? boolval( $cVar ) : false;
+		if ( $oSkin->getUser()->isAllowed( 'wikiadmin' ) && $bActive && !$status && $oSkin->getTitle()->isMainPage()) {
 			$oView = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Views\BlueSpiceUpgradeHelperPanel();
 			$sData .= $oView->execute();
 		}
+
 		return true;
 	}
 
