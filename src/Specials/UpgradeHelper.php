@@ -65,7 +65,16 @@ class UpgradeHelper extends BsSpecialPage {
 
 		$currentVersionData = $this->readManifestFile();
 
-		$currentVersionData[ 'version_head' ] = "Current version";
+		$currentVersionData[ 'version_head' ] = wfMessage( "bs-ugradehelper-current-title" )->text();
+		$currentVersionData[ 'package_button_resign' ] = wfMessage( "bs-upgradehelper-package-button-resign" )->text();
+		$currentVersionData[ 'package_button_extend' ] = wfMessage( "bs-upgradehelper-package-button-extend" )->text();
+		$currentVersionData[ 'package_button_upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade" )->text();
+		//package_description
+		$currentVersionData[ 'package_description' ] = wfMessage( "bs-ugradehelper-package-description", [
+			$currentVersionData[ "package" ],
+			$currentVersionData[ "versionCode" ],
+			(strpos( strtolower($currentVersionData[ "package" ]), "free" ) !== false) ? wfMessage( "bs-ugradehelper-unlimited" ) : wfMessage( "bs-ugradehelper-limited" )
+		  ] )->text();
 
 		$out->addHTML( $templateParser->processTemplate(
 			'TokenButton', []

@@ -1,7 +1,6 @@
 var app = require( 'express' )();
 var http = require( 'http' ).Server( app );
 var io = require( 'socket.io' )( http );
-var watch = require( 'watch' );
 var lastLine = require( 'last-line' );
 var fileExtension = require( 'file-extension' );
 var Inotify = require( 'inotify' ).Inotify;

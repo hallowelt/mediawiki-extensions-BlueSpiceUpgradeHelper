@@ -48,3 +48,8 @@
     display: inline-block;
     font-size: 16px;
 }
+
+/* unvisited link */
+.upgrade-hint-button:link,.upgrade-hint-button:visited,.upgrade-hint-button:hover,.upgrade-hint-button:active {
+    color: white;
+}

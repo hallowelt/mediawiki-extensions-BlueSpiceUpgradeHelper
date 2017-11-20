@@ -1,13 +1,22 @@
 <div class="version-overview">
 	<div class="version-head">{{version_head}}</div>
-	<div class="version-body">
-		<div class="version-package"><span class="label">Package:</span> <span>{{package}}</span></div>
-		<div class="version-version"><span class="label">Version:</span> <span>{{versionName}}</span></div>
-		<div class="version-system"><span class="label">System:</span> <span>{{system}}</span></div>
-		{{#pro}}
-		<div class="version-valid-from"><span class="label">Valid from:</span> <span>{{version_valid_from}}</span></div>
-		<div class="version-valid-until"><span class="label">Valid until:</span> <span>{{version_valid_until}}</span></div>
-		<div class="version-user-allowed"><span class="label">Users allowed:</span> <span>{{version_user_allowed}}</span></div>
-		{{/pro}}
+	<div class="version-box>
+		<div class="version-description">
+			{{package_description}}
+		</div>
+		<div class="version-term">
+			<div>{{package_term_label}}:</div> <div>{{package_term}}</div>
+		</div>
+		<div class="version-support-hours">
+			<div>{{package_support_hours_label}}:</div> <div>{{package_support_hours}}</div>
+		</div>
+		<div class="version-admin">
+			<div>{{package_admin_label}}:</div> <div>{{package_admin}}</div>
+		</div>
+		<div class="version-buttons">
+			<button class="version-button-resign">{{package_button_resign}}</button>
+			<button class="version-button-extend">{{package_button_extend}}</button>
+			<button class="version-button-upgrade">{{package_button_upgrade}}</button>
+		</div>
 	</div>
 </div>
