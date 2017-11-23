@@ -23,12 +23,27 @@ class SubscriptionManager extends \BSApiTasksBase {
 				]
 			]
 		],
+		'triggerUpgrade' => [
+			'examples' => [
+				[
+					'token' => 'token hash to use for upgrade'
+				]
+			],
+			'params' => [
+				'token' => [
+					'desc' => 'token hash to use for upgrade',
+					'type' => 'string',
+					'required' => true
+				]
+			]
+		],
 		'disableHint' => []
 	);
 
 	protected function getRequiredTaskPermissions() {
 		return array(
 			'parsetoken' => array( Hooks\Main::$permissionViewSpecial ),
+			'triggerUpgrade' => array( Hooks\Main::$permissionViewSpecial ),
 			'disableHint' => array( 'wikiadmin' )
 		);
 	}
@@ -37,6 +52,25 @@ class SubscriptionManager extends \BSApiTasksBase {
 		$oReturn = $this->makeStandardReturn();
 		BsConfig::set( Hooks\Main::$configNameHint, false );
 		BsConfig::saveSettings();
+		$oReturn->success = true;
+		return $oReturn;
+	}
+
+	protected function task_triggerUpgrade( $oTaskData ) {
+		$oReturn = $this->makeStandardReturn();
+
+		if ( !isset( $oTaskData->token ) ) {
+			$oResponse->success = false;
+			return $oResponse;
+		}
+
+		//$oTaskData->token
+		$upgradeHelper = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper();
+		file_put_contents( $upgradeHelper->getTokenFilePath(), $oTaskData->token );
+
+		$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
+		file_put_contents( $upgradeTaskFilePath, "" );
+
 		$oReturn->success = true;
 		return $oReturn;
 	}

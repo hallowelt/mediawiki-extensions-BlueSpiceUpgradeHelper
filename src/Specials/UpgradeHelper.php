@@ -37,6 +37,10 @@ class UpgradeHelper extends BsSpecialPage {
 		parent::__construct( 'SubscriptionManager', Hooks\Main::$permissionViewSpecial );
 	}
 
+	public function getTokenFilePath(){
+		return $this->filePath;
+	}
+
 	static function tokenFilePath() {
 		//$BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE
 		if ( empty( getenv( 'BLUESPICE_CONFIG_PATH' ) ) ||
