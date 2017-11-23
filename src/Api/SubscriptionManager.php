@@ -4,10 +4,11 @@ namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Api;
 
 use Lcobucci\JWT\Parser;
 use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
+use MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials;
 
 class SubscriptionManager extends \BSApiTasksBase {
 
-	protected $url = 'https://selfservice.bluespice.com/frontend/info/docker/REL1_27/bluespice.zip';
+	protected $url = 'https://selfservice.bluespice.com/frontend/info/';
 	protected $aTasks = array(
 		'parsetoken' => [
 			'examples' => [
@@ -23,7 +24,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 				]
 			]
 		],
-		'disableHint' => [ ]
+		'disableHint' => []
 	);
 
 	protected function getRequiredTaskPermissions() {
@@ -51,7 +52,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 
 		$oResponse->payload[ 'token_data' ] = $this->parseToken( $oTaskData->token );
 
-		$req = \MWHttpRequest::factory( $this->url );
+		$req = \MWHttpRequest::factory( $this->getUrl() );
 		$req->setHeader( 'Authorization', "Bearer " . $oTaskData->token );
 		$status = $req->execute();
 
@@ -66,6 +67,12 @@ class SubscriptionManager extends \BSApiTasksBase {
 
 
 		return $oResponse;
+	}
+
+	protected function getUrl() {
+		$upgradeHelper = new UpgradeHelper();
+		$manifestData = $upgradeHelper->getManifestData();
+		return $this->url . $manifestData[ "system" ] . "/" . trim( $manifestData[ "branch" ], "_" . $manifestData[ "system" ] ) . "/" . "bluespice.zip";
 	}
 
 	protected function parseToken( $sToken ) {

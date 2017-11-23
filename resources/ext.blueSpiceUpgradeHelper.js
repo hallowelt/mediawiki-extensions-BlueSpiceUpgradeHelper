@@ -1,4 +1,8 @@
 ( function ( mw, $ ) {
+	$('.version-button-upgrade').click(function(){
+		//$('body > *:not(.token-process)').css("filter","blur(3px)");
+		$( '.token-process' ).show();
+	});
 	$( '#insert_token' ).click( function () {
 		$( '.token-process' ).show();
 	} );
@@ -21,4 +25,5 @@
 		} );
 
 	} );
+	$("#compare-bluespice").load("../extensions/BlueSpiceUpgradeHelper/webservices/versioncompare.php #main");
 }( mediaWiki, jQuery ) );
