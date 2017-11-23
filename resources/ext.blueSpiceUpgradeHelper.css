@@ -1,3 +1,38 @@
+.version-term > div:first-of-type, .version-support-hours > div:first-of-type, .version-admin > div:first-of-type, .version-number > div:first-of-type{
+	float: left;
+	clear: both;
+	padding-left: 11px;
+}
+.version-term > div:last-of-type, .version-support-hours > div:last-of-type, .version-admin > div:last-of-type, .version-number > div:last-of-type{
+	float: right;
+	padding-right: 20px;
+}
+
+#close_token_input{
+	clear: both;
+	margin-top: 10px;
+	position: absolute;
+	bottom: 10px;
+}
+
+.button-do-upgrade{
+	margin-top: 80px;
+}
+
+.token-process{
+	position: relative;
+	text-align: center;
+}
+
+.version-buttons{
+	padding-top: 10px;
+	clear: both;
+}
+
+.version-description{
+	margin-bottom: 10px;
+}
+
 .token-process{
 	position: absolute;
 	top: 100px;
@@ -6,7 +41,7 @@
 	margin-left: auto;
 	margin-right: auto;
 	width: 800px; /* Need a specific value to work */
-	height: 600px;
+	height: 500px;
 	z-index: 100;
 	background-color: #F3F3F3;
 	border-top: solid 2px;
@@ -31,7 +66,7 @@
 	text-align: center;
 }
 
-.version-term, .version-support-hours, .version-admin{
+.version-term, .version-support-hours, .version-admin, .version-number{
 	width: 400px;
 	margin: auto;
 }
@@ -75,4 +110,8 @@
     display: inline-block;
     font-size: 1em;
 	border-radius: 3px;
+}
+
+.single .version-box{
+	border: none;
 }

@@ -19,6 +19,21 @@
 			taskData: JSON.stringify( { token: downloadToken } )
 		} ).done( function ( data ) {
 			console.log( data );
+			if(data.success === false){
+				$('#token_checkup_result').hide();
+				$('#token_checkup_result').empty();
+				return;
+			}
+			myTemplate = mw.template.get( 'ext.blueSpiceUpgradeHelper.base', 'VersionOverviewSingle.mustache' );
+			templateData = {
+				package: data.payload.response_data.package_manifest.package,
+				versionCode: data.payload.response_data.package_manifest.versionCode,
+				package_limited: 0,
+				supportHours: 0,
+				adminUsername: mw.config.get( 'wgUserName' )
+			};
+			var html = myTemplate.render( templateData );
+			$('#token_checkup_result').append(html).show();
 		} ).fail( function ( data, response ) {
 			console.log( data );
 			console.log( response );

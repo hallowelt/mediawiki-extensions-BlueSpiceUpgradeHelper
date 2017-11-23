@@ -4,7 +4,6 @@ namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Api;
 
 use Lcobucci\JWT\Parser;
 use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
-use MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials;
 
 class SubscriptionManager extends \BSApiTasksBase {
 
@@ -70,7 +69,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 	}
 
 	protected function getUrl() {
-		$upgradeHelper = new UpgradeHelper();
+		$upgradeHelper = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper();
 		$manifestData = $upgradeHelper->getManifestData();
 		return $this->url . $manifestData[ "system" ] . "/" . trim( $manifestData[ "branch" ], "_" . $manifestData[ "system" ] ) . "/" . "bluespice.zip";
 	}

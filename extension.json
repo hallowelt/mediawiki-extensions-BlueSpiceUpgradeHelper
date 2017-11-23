@@ -18,6 +18,9 @@
 	},
 	"ResourceModules": {
 		"ext.blueSpiceUpgradeHelper.base": {
+			"templates": {
+				"VersionOverviewSingle.mustache": "../templates/VersionOverviewSingle.mustache"
+			},
 			"scripts": [
 				"ext.blueSpiceUpgradeHelper.js"
 			],
