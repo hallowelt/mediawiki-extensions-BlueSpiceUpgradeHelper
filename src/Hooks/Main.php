@@ -2,6 +2,8 @@
 
 namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 
+use MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper;
+
 /**
  * Hooks for BoilerPlate extension
  *
@@ -44,9 +46,12 @@ class Main {
 		$bActive = \BsConfig::get(
 			self::$configNameHint
 		);
-		$cVar = filter_input(INPUT_COOKIE, 'bs-bluespiceupgradehelper-hide', FILTER_VALIDATE_BOOLEAN);
+		$cVar = filter_input( INPUT_COOKIE, 'bs-bluespiceupgradehelper-hide', FILTER_VALIDATE_BOOLEAN );
 		$status = (!empty( $cVar )) ? boolval( $cVar ) : false;
-		if ( $oSkin->getUser()->isAllowed( 'wikiadmin' ) && $bActive && !$status && $oSkin->getTitle()->isMainPage()) {
+
+		$upgradeHelper = new UpgradeHelper();
+		
+		if ( $oSkin->getUser()->isAllowed( 'wikiadmin' ) && $bActive && !$status && $oSkin->getTitle()->isMainPage() && !$upgradeHelper->isPro() ) {
 			$oView = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Views\BlueSpiceUpgradeHelperPanel();
 			$sData .= $oView->execute();
 		}

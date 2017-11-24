@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
+  "name": "BlueSpiceUpgradeStatusService",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "Describe the current upgrade status, stateless, offer socket",
   "dependencies": {
     "express": "^4.15.2",
     "file-extension": "^3.1.2",

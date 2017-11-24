@@ -37,8 +37,17 @@ class UpgradeHelper extends BsSpecialPage {
 		parent::__construct( 'SubscriptionManager', Hooks\Main::$permissionViewSpecial );
 	}
 
-	public function getTokenFilePath(){
+	public function getTokenFilePath() {
 		return $this->filePath;
+	}
+
+	public function isPro() {
+		$manifestData = $this->getManifestData();
+		if ( strpos( strtolower( $manifestData[ "package" ] ), "pro" ) === false ) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	static function tokenFilePath() {
@@ -167,7 +176,7 @@ class UpgradeHelper extends BsSpecialPage {
 		return false;
 	}
 
-	public function getManifestData(){
+	public function getManifestData() {
 		return $this->readManifestFile();
 	}
 
