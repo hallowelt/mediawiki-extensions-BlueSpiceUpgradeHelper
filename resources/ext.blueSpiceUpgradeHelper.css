@@ -2,6 +2,10 @@ h3.upgrade_status_element{
 	margin-top:  80px;
 }
 
+#upgrade_status li{
+	list-style: none;
+}
+
 .version-term > div:first-of-type, .version-support-hours > div:first-of-type, .version-admin > div:first-of-type, .version-number > div:first-of-type{
 	float: left;
 	clear: both;
@@ -45,7 +49,7 @@ h3.upgrade_status_element{
 	margin-left: auto;
 	margin-right: auto;
 	width: 800px; /* Need a specific value to work */
-	height: 500px;
+	height: 720px;
 	z-index: 100;
 	background-color: #F3F3F3;
 	border-top: solid 2px;
