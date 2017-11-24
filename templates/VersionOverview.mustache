@@ -1,13 +1,26 @@
 <div class="version-overview">
-	<div class="version-head">{{version_head}}</div>
-	<div class="version-body">
-		<div class="version-package"><span class="label">Package:</span> <span>{{version_package}}</span></div>
-		<div class="version-version"><span class="label">Version:</span> <span>{{version_version}}</span></div>
-		<div class="version-system"><span class="label">System:</span> <span>{{version_system}}</span></div>
-		{{#version_pro}}
-		<div class="version-valid-from"><span class="label">Valid from:</span> <span>{{version_valid_from}}</span></div>
-		<div class="version-valid-until"><span class="label">Valid until:</span> <span>{{version_valid_until}}</span></div>
-		<div class="version-user-allowed"><span class="label">Users allowed:</span> <span>{{version_user_allowed}}</span></div>
-		{{/version_pro}}
+	<div class="version-head">{{_ "bs-ugradehelper-current-title"}}</div>
+	<div class="version-box">
+		<div class="version-description">
+			{{_ "bs-ugradehelper-package-description" package versionCode package_limited}}
+		</div>
+		<div class="version-term">
+			<div>{{_ "bs-upgradehelper-package-term-label"}}:</div>
+			<div>{{_ "bs-upgradehelper-package-term" package}}</div>
+		</div>
+		<div class="version-support-hours">
+			<div>{{_ "bs-upgradehelper-package-support-hours-label"}}:</div>
+			<div>{{_ "bs-upgradehelper-package-support-hours" supportHours}}</div>
+		</div>
+		<div class="version-admin">
+			<div>{{_ "bs-upgradehelper-package-admin-label"}}:</div>
+			<div>{{_ "bs-upgradehelper-package-admin" adminUsername}}</div>
+		</div>
+
+		<div class="version-buttons">
+			<button class="version-button-resign">{{_ "bs-upgradehelper-package-button-resign"}}</button>
+			<button class="version-button-extend">{{_ "bs-upgradehelper-package-button-extend"}}</button>
+			<button class="version-button-upgrade">{{_ "bs-upgradehelper-package-button-upgrade"}}</button>
+		</div>
 	</div>
 </div>

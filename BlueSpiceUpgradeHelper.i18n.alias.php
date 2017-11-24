@@ -10,5 +10,5 @@ $specialPageAliases = [];
 
 /** English (English) */
 $specialPageAliases['en'] = [
-	'BlueSpiceUpgradeHelper' => [ 'BlueSpiceUpgradeHelper', 'BlueSpice UpgradeHelper', 'BlueSpice Upgrade Helper', 'UpgradeHelper', 'Upgrade Helper' ],
+	'SubscriptionManager' => [ 'Subscription Manager', 'BlueSpiceUpgradeHelper', 'BlueSpice UpgradeHelper', 'BlueSpice Upgrade Helper', 'UpgradeHelper', 'Upgrade Helper', 'SubscriptionManager' ],
 ];

@@ -1,36 +1,117 @@
-.version-overview{
-	border:1px solid lightsteelblue;
-	padding:5px;
-	width:30em;
-	margin:0 0 0.5em 1em;
-	font-size:85%;
-	background:#F9F9F9;
-
+.version-term > div:first-of-type, .version-support-hours > div:first-of-type, .version-admin > div:first-of-type, .version-number > div:first-of-type{
 	float: left;
+	clear: both;
+	padding-left: 11px;
+}
+.version-term > div:last-of-type, .version-support-hours > div:last-of-type, .version-admin > div:last-of-type, .version-number > div:last-of-type{
+	float: right;
+	padding-right: 20px;
 }
 
-.version-head{
-	background:lightsteelblue;
-	margin-bottom:2px;
-	text-align:center;
-	font-size:118%;
-	font-weight:bold;
-	width:100%;
+#close_token_input{
+	clear: both;
+	margin-top: 10px;
+	position: absolute;
+	bottom: 10px;
 }
 
-.version-body{
-	display: table;
+.button-do-upgrade{
+	margin-top: 80px;
 }
 
-.version-body > div{
-	display:table-row;
+.token-process{
+	position: relative;
+	text-align: center;
 }
 
-.version-body > div > span{
-	width: 9em;
-	display:table-cell;
+.version-buttons{
+	padding-top: 10px;
+	clear: both;
 }
 
-.version-body .label{
+.version-description{
+	margin-bottom: 10px;
+}
+
+.token-process{
+	position: absolute;
+	top: 100px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 800px; /* Need a specific value to work */
+	height: 500px;
+	z-index: 100;
+	background-color: #F3F3F3;
+	border-top: solid 2px;
+	border-bottom: solid 2px;
+	border-color: #E9E9E9;
+	padding: 10px;
+}
+.version-head, #compare-head{
 	font-weight: bold;
+}
+
+.version-box, #compare-bluespice{
+	border-top: solid 2px;
+	border-bottom: solid 2px;
+	border-color: #E9E9E9;
+	background-color: #F3F3F3;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.version-box{
+	text-align: center;
+}
+
+.version-term, .version-support-hours, .version-admin, .version-number{
+	width: 400px;
+	margin: auto;
+}
+
+
+
+#compare-bluespice table{
+	width: 100%;
+}
+
+#compare-bluespice #content{
+	background-color: inherit;
+}
+
+.tablepress thead th, .tablepress tfoot th {
+    background-color: #3e5389;
+    color: #fff;
+}
+
+.tablepress tbody tr:nth-child(odd){
+	background-color: lightgray;
+}
+
+.version-button-upgrade{
+	background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+}
+
+.version-button-resign, .version-button-extend{
+	background-color: lightgray; /* Green */
+    border: none;
+    color: black;
+
+}
+
+.version-button-upgrade, .version-button-resign, .version-button-extend{
+	padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+	border-radius: 3px;
+}
+
+.single .version-box{
+	border: none;
 }

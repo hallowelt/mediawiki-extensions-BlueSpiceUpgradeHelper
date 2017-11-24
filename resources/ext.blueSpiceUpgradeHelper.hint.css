@@ -1,0 +1,55 @@
+#bs-bluespiceupgradehelper{
+	/*@embed*/
+	background-image: url('images/icon-info.gif');
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: #FFAE00;
+	border-top: 1px solid #b73a3a;
+	font-weight: bold;
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	display: none;
+	z-index: 999;
+}
+
+#bs-bluespiceupgradehelper>div {
+	margin: 13px;
+}
+
+#bs-bluespiceupgradehelper-text {
+	float: left;
+	width: 80%;
+	padding-left: 30px;
+}
+
+#bs-bluespiceupgradehelper-closebutton {
+	/*@embed*/
+	float:right;
+	width: 15px;
+	height: 15px;
+	margin-right: 20px;
+	cursor: pointer;
+}
+
+#bs-bluespiceupgradehelper-closebutton:before{
+	font-family: "entypo" !important;
+	content: "\e98d";
+}
+
+.upgrade-hint-button{
+	background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+/* unvisited link */
+.upgrade-hint-button:link,.upgrade-hint-button:visited,.upgrade-hint-button:hover,.upgrade-hint-button:active {
+    color: white;
+}

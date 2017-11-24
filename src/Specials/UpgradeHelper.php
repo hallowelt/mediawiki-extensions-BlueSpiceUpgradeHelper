@@ -17,10 +17,28 @@ use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 class UpgradeHelper extends BsSpecialPage {
 
 	protected $filePath = "";
+	protected $manifestAttributes = [
+		"versionCode" => true,
+		"versionName" => true,
+		"repository" => true,
+		"branch" => true,
+		"package" => true,
+		"system" => true,
+		"installLocation" => false,
+		"configLocation" => false,
+		"dataLocation" => false,
+		"pro" => [
+			"convert" => "exists if yes"
+		]
+	];
 
 	public function __construct() {
 		$this->filePath = self::tokenFilePath();
-		parent::__construct( 'BlueSpiceUpgradeHelper', Hooks\Main::$permissionViewSpecial );
+		parent::__construct( 'SubscriptionManager', Hooks\Main::$permissionViewSpecial );
+	}
+
+	public function getTokenFilePath(){
+		return $this->filePath;
 	}
 
 	static function tokenFilePath() {
@@ -43,136 +61,33 @@ class UpgradeHelper extends BsSpecialPage {
 	public function execute( $sub ) {
 		parent::execute( $sub );
 
-		$templateParser = new \TemplateParser( __DIR__ . '/../../templates' );
+		$templateParser = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\TemplateParser( __DIR__ . '/../../templates' );
 
 		$this->setHeaders();
 
 		$out = $this->getOutput();
 
-		$arrCurrentData = self::readManifest();
+		$currentVersionData = array_merge( $this->readManifestFile(), $this->readTokenData() );
 
-		//$out->setPageTitle( $this->msg( 'bs-upgrade-helper-token-label' ) );
-
-
-		if ( empty( $this->filePath ) ) {
-			$out->addWikiMsg( "bs-upgrade-helper-env-not-ok" );
+		if ( !isset( $currentVersionData[ 'support_hours' ] ) ) {
+			$currentVersionData[ 'support_hours' ] = "";
 		}
 
-		//read in token meta..
+		//package_description
+		$currentVersionData[ 'package_limited' ] = (strpos( strtolower( $currentVersionData[ "package" ] ), "free" ) !== false) ? wfMessage( "bs-ugradehelper-unlimited" ) : wfMessage( "bs-ugradehelper-limited" );
+		$currentVersionData[ 'supportHours' ] = intval( $currentVersionData[ 'support_hours' ] );
+		$currentVersionData[ 'adminUsername' ] = $this->getUser()->getName();
 
-		if ( !empty( file_get_contents( $this->filePath ) ) ) {
-			$token = (new Parser() )->parse( ( string ) file_get_contents( $this->filePath ) ); // Parses from a string
+		$out->addHTML( $templateParser->processTemplate(
+			'VersionOverview', $currentVersionData
+		) );
 
-			$nbf = $token->getClaim( 'nbf' );
-			$exp = $token->getClaim( 'exp' );
-			$maxUser = $token->getClaim( 'max_user' );
-			$arrProductData = explode( "/", $token->getClaim( 'product_name' ) );
+		$out->addHTML( \Html::element( "div", [ "id" => "compare-head" ], wfMessage( "bs-upgradehelper-compare-head-label" ) ) );
+		$out->addHTML( \Html::element( "div", [ "id" => "compare-bluespice" ] ) );
 
-			/*
-			  $out->addHtml( "<h3>Token data</h3>" );
-			  $out->addWikiText( "Created: " . date( 'd.m.Y', $nbf ) ); //issue timestamp
-			  $out->addWikiText( "Expire at: " . date( 'd.m.Y', $exp ) ); //expire timestamp
-			  $out->addWikiText( "User allowed: " . $maxUser ); //expire timestamp
-
-			  $out->addWikiText( "System: " . $arrProductData[ 0 ] ); //expire timestamp
-			  $out->addWikiText( "Version: " . $arrProductData[ 1 ] ); //expire timestamp
-			  $out->addWikiText( "Package: " . trim( ucwords( implode( " ", explode( "_", $arrProductData[ 2 ] ) ) ), ".zip" ) );
-			 *
-			 */
-
-			$package = trim( ucwords( implode( " ", explode( "_", $arrProductData[ 2 ] ) ) ), ".zip" );
-			$system = $arrProductData[ 0 ];
-			$validFrom = date( 'd.m.Y', $nbf );
-			$validUntil = date( 'd.m.Y', $exp );
-			$usersAllowed = ($maxUser == 0) ? "unlimited" : $maxUser;
-
-			global $bsgBlueSpiceExtInfo, $IP;
-
-			$currentPackage = "";
-			if ( !empty( getenv( "BLUESPICE_FREE_FILE" ) ) && file_exists( "$IP/" . getenv( "BLUESPICE_FREE_FILE" ) ) ) {
-				$currentPackageTemp = basename( file_get_contents( "$IP/" . getenv( "BLUESPICE_FREE_FILE" ) ), ".zip" );
-				$currentPackage = ucwords( implode( " ", explode( "_", $currentPackageTemp ) ) );
-			} else {
-				$currentPackage = "Free";
-			}
-			$out->addHTML( $templateParser->processTemplate(
-				'VersionOverview', [
-				  "version_head" => "Current version",
-				  "version_package" => $currentPackage,
-				  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-				  "version_system" => ucwords( (empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" ) ),
-				  "version_pro" => (strpos( $currentPackage, "Pro" ) !== FALSE),
-				  "version_valid_from" => $validFrom,
-				  "version_valid_until" => $validUntil,
-				  "version_user_allowed" => $usersAllowed
-				]
-			) );
-
-			if ( $currentPackage !== $package && strtotime( $validFrom ) <= time() && time() <= strtotime( $validUntil ) + 3600 * 24 ) {
-				$out->addHTML( $templateParser->processTemplate(
-					'VersionOverview', [
-					  "version_head" => "Available Version for Upgrade",
-					  "version_package" => $package,
-					  "version_version" => (empty( getenv( "BLUESPICE_BASE_VERSION" ) )) ? $bsgBlueSpiceExtInfo[ "version" ] : getenv( "BLUESPICE_BASE_VERSION" ),
-					  "version_system" => ucwords( (empty( getenv( "BLUESPICE_BASE_ENV" ) )) ? PHP_OS : getenv( "BLUESPICE_BASE_ENV" ) ),
-					  "version_pro" => true,
-					  "version_valid_from" => $validFrom,
-					  "version_valid_until" => $validUntil,
-					  "version_user_allowed" => $usersAllowed
-					]
-				) );
-			}
-		}
-
-		$out->addHelpLink( 'How to buy BlueSpice Pro' );
-
-		if ( empty( file_get_contents( $this->filePath ) ) ) {
-			$out->addWikiMsg( 'bs-upgrade-helper-intro' );
-		}
-
-		$formDescriptor = [
-			'bsUpgradeTokenField' => [
-				'class' => 'HTMLTextField',
-				'label' => $this->msg( 'bs-upgrade-helper-token-label' ),
-				'default' => file_exists( $this->filePath ) ? file_get_contents( $this->filePath ) : "",
-				'validation-callback' => [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper', 'validateTokenField' ],
-			]
-		];
-
-		$formDescriptor[ 'save_token' ] = array(
-			'type' => 'submit',
-			'buttonlabel' => $this->msg( 'bs-upgrade-helper-save' ),
-		);
-
-
-		if ( self::validateTokenField( file_get_contents( $this->filePath ) ) ) {
-			$formDescriptor[ 'upgrade' ] = array(
-				'type' => 'submit',
-				'buttonlabel' => $this->msg( 'bs-upgrade-helper-upgrade' ),
-				''
-			);
-		}
-
-		/*
-		  $formDescriptor[ 'downgrade' ] = array(
-		  'type' => 'submit',
-		  'buttonlabel' => $this->msg( 'bs-upgrade-helper-downgrade' ),
-		  );
-		 *
-		 */
-
-
-
-		// $htmlForm = new HTMLForm( $formDescriptor, $this->getContext(), 'testform' );
-		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'tokenform' );
-
-		$htmlForm->suppressDefaultSubmit();
-
-		$htmlForm->setSubmitText( wfMessage( 'bs-upgrade-helper-save' )->text() );
-		$htmlForm->setAction( $this->getPageTitle( $sub )->getLocalUrl() );
-		$htmlForm->setSubmitCallback( [ 'MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper', 'processInput' ] );
-
-		//$htmlForm->show();
+		$out->addHTML( $templateParser->processTemplate(
+			'TokenButton', $currentVersionData
+		) );
 	}
 
 	static function readManifest() {
@@ -262,6 +177,81 @@ class UpgradeHelper extends BsSpecialPage {
 
 	protected function getGroupName() {
 		return 'bluespice';
+	}
+
+	protected function getDefaultManifestPath() {
+		global $IP;
+		return $IP . "/BlueSpiceManifest.xml";
+	}
+
+	protected function readManifestFile( $path = null ) {
+		if ( empty( $path ) ) {
+			$path = $this->getDefaultManifestPath();
+		}
+		if ( file_exists( $path ) ) {
+			$domDoc = new \DOMDocument( '1.0', 'UTF-8' );
+			if ( !$domDoc->load( $path ) ) {
+				return false;
+			}
+			$domRoot = $domDoc->documentElement;
+
+			$aReturn = $this->parseAttributes( $domRoot );
+
+			return $aReturn;
+		}
+		return false;
+	}
+
+	public function getManifestData(){
+		return $this->readManifestFile();
+	}
+
+	protected function parseAttributes( $domRoot ) {
+		$aReturn = [];
+		foreach ( $this->manifestAttributes as $attribute => $required ) {
+			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
+				return false;
+			}
+			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
+				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			} else {
+				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
+			}
+		}
+		return $aReturn;
+	}
+
+	public static function parseToken( $domRoot ) {
+		$aReturn = [];
+		foreach ( $this->manifestAttributes as $attribute => $required ) {
+			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
+				return false;
+			}
+			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
+				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			} else {
+				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
+			}
+		}
+		return $aReturn;
+	}
+
+	public function readTokenData() {
+		$arrRet = [];
+		if ( file_exists( $this->filePath ) ) {
+			try {
+				$token = (new Parser() )->parse( ( string ) file_get_contents( $this->filePath ) ); // Parses from a string
+
+				$arrRet[ "nbf" ] = date( 'd.m.Y', $token->getClaim( 'nbf' ) );
+				$arrRet[ "exp" ] = date( 'd.m.Y', $token->getClaim( 'exp' ) );
+				$arrRet[ "max_user" ] = $token->getClaim( 'max_user' );
+				$arrRet[ "support_hours" ] = $token->getClaim( 'support_hours' );
+			} catch ( \Exception $e ) {
+				$arrRet[ "token_error" ] = $e->getMessage();
+			}
+		}
+
+		return $arrRet;
 	}
 
 }

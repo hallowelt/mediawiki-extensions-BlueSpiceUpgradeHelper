@@ -4,19 +4,10 @@
 	"author": [
 		"Leonid Verhovskij"
 	],
-	"url": "https://www.mediawiki.org/wiki/Extension:BoilerPlate",
+	"url": "https://www.mediawiki.org/wiki/Extension:BlueSpiceUpgradeHelper",
 	"descriptionmsg": "bs-upgrade-helper-desc",
 	"license-name": "MIT",
 	"type": "other",
-	"ConfigRegistry": {
-		"boilerplate": "GlobalVarConfig::newInstance"
-	},
-	"config": {
-		"BoilerPlateEnableFoo": {
-			"value": true,
-			"description": "Whether or not the foo feature is enabled."
-		}
-	},
 	"ExtensionMessagesFiles": {
 		"BlueSpiceUpgradeHelperAlias": "BlueSpiceUpgradeHelper.i18n.alias.php"
 	},
@@ -27,6 +18,9 @@
 	},
 	"ResourceModules": {
 		"ext.blueSpiceUpgradeHelper.base": {
+			"templates": {
+				"VersionOverviewSingle.mustache": "../templates/VersionOverviewSingle.mustache"
+			},
 			"scripts": [
 				"ext.blueSpiceUpgradeHelper.js"
 			],
@@ -35,12 +29,23 @@
 			],
 			"messages": [],
 			"dependencies": []
+		},
+		"ext.blueSpiceUpgradeHelper.hint": {
+			"scripts": [
+				"ext.blueSpiceUpgradeHelper.hint.js"
+			],
+			"styles": [
+				"ext.blueSpiceUpgradeHelper.hint.css"
+			],
+			"messages": [],
+			"dependencies": []
 		}
 	},
 	"callback": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onRegistration",
 	"Hooks": {
 		"BSWikiAdminMenuItems": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBSWikiAdminMenuItems",
-		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay"
+		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay",
+		"SkinAfterContent": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onSkinAfterContent"
 	},
 	"GroupPermissions": {
 		"sysop": {
@@ -48,11 +53,14 @@
 		}
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "modules",
-		"remoteExtPath": "BlueSpiceUpgradeHelper/modules"
+		"localBasePath": "resources",
+		"remoteExtPath": "BlueSpiceUpgradeHelper/resources"
 	},
 	"SpecialPages": {
-		"BlueSpiceUpgradeHelper": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
+		"SubscriptionManager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
+	},
+	"APIModules": {
+		"bs-subscription-manager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Api\\SubscriptionManager"
 	},
 	"load_composer_autoloader": true,
 	"manifest_version": 1

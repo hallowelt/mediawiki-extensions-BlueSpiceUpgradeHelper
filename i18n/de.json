@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"bs-upgrade-helper-desc": "Special Page for upgrading bluespice to pro version.",
+	"apihelp-bs-subscription-manager-summary": "Provides common tasks for Subscription manager",
+	"prefs-bluespiceupgradehelper": "Subscription Manager",
+	"bs-bluespiceupgradehelper-show-menu-links": "Show in admin menu",
+	"bs-bluespiceupgradehelper-hint-active": "Show upgrade hint on start page",
+	"bs-upgrade-helper-title": "Subscription manager",
+	"bs-upgrade-helper-intro": "Please save token to enable bluespice upgrade function",
+	"bs-upgrade-helper-token-label": "Token",
+	"bs-upgrade-helper-save": "Save token",
+	"bs-upgrade-helper-upgrade": "Upgrade",
+	"bs-upgrade-helper-downgrade": "Downgrade",
+	"bs-upgrade-helper-": "Save token",
+	"bs-upgrade-helper-token-button-label": "Save token",
+	"bs-upgrade-helper-env-not-ok": "Error, env vars are not set properly.",
+	"bs-bluespiceupgradehelper-hint": "To Upgrade your BlueSpice to pro, go to [Special:Subscription manager]",
+	"bs-bluespiceupgradehelper-closebutton": "Hide this message",
+	"bs-bluespiceupgradehelper-confirm": "Got it",
+	"bs-ugradehelper-current-title": "Ihre aktuelle Subskription",
+	"bs-ugradehelper-package-description": "$1 in der Version $2 mit $3 möglichen Nutzerkonten.",
+	"bs-ugradehelper-unlimited": "unbegrenzt",
+	"bs-ugradehelper-limited": "begrenzt",
+	"bs-upgradehelper-compare-head-label": "Verfügbare Subskriptionen",
+	"action-bluespice-upgradehelper-viewspecialpage": "view special page \"Subscription manager\"",
+	"bluespiceupgradehelper": "Subscription manager",
+	"subscriptionmanager": "Subscription manager",
+	"upgrade_invite": "Ganz einfach upgraden zum professionellen Unternehmenswiki! (Überschrift)\nBauen Sie Ihr BlueSpice Wiki zu einem BlueSpice pro aus und nutzen Sie den vollen Funktionsumfang. Das Experten-Team des Softwareherstellers unterstützt Sie darüber hinaus durch seinen kompetenten Produkt- und Entwicklungssupport.\nSo managen Sie Ihr Firmenwissen und koordinieren Ihre Firmenprozesse – zentral, kollaborativ und immer aktuell!\nGleich upgraden (Button)"
+}
