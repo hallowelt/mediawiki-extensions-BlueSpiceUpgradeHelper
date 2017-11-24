@@ -14,7 +14,7 @@ class Main {
 
 	public static $configNameShowLink = 'MW::BlueSpiceUpgradeHelper::ShowMenuLinks';
 	public static $configNameHint = 'MW::BlueSpiceUpgradeHelper::ShowHint';
-	public static $permissionViewSpecial = 'bluespice-upgradehelper-viewspecialpage';
+	public static $permissionViewSpecial = 'siteadmin';
 
 	public static function onRegistration() {
 		\BsConfig::registerVar( self::$configNameShowLink, true, \BsConfig::LEVEL_PUBLIC | \BsConfig::TYPE_BOOL, 'bs-bluespiceupgradehelper-show-menu-links', 'toggle' );
@@ -50,7 +50,7 @@ class Main {
 		$status = (!empty( $cVar )) ? boolval( $cVar ) : false;
 
 		$upgradeHelper = new UpgradeHelper();
-		
+
 		if ( $oSkin->getUser()->isAllowed( 'wikiadmin' ) && $bActive && !$status && $oSkin->getTitle()->isMainPage() && !$upgradeHelper->isPro() ) {
 			$oView = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Views\BlueSpiceUpgradeHelperPanel();
 			$sData .= $oView->execute();
