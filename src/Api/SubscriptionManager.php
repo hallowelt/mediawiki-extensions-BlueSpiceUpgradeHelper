@@ -37,6 +37,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 				]
 			]
 		],
+		'triggerDowngrade' => [],
 		'disableHint' => []
 	);
 
@@ -44,6 +45,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 		return array(
 			'parsetoken' => array( Hooks\Main::$permissionViewSpecial ),
 			'triggerUpgrade' => array( Hooks\Main::$permissionViewSpecial ),
+			'triggerDowngrade' => array( Hooks\Main::$permissionViewSpecial ),
 			'disableHint' => array( 'wikiadmin' )
 		);
 	}
@@ -52,6 +54,16 @@ class SubscriptionManager extends \BSApiTasksBase {
 		$oReturn = $this->makeStandardReturn();
 		BsConfig::set( Hooks\Main::$configNameHint, false );
 		BsConfig::saveSettings();
+		$oReturn->success = true;
+		return $oReturn;
+	}
+
+	protected function task_triggerDowngrade( ) {
+		$oReturn = $this->makeStandardReturn();
+
+		$downgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "downgrade.task";
+		file_put_contents( $downgradeTaskFilePath, "" );
+
 		$oReturn->success = true;
 		return $oReturn;
 	}
