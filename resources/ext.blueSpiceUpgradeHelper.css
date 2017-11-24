@@ -1,3 +1,7 @@
+h3.upgrade_status_element{
+	margin-top:  80px;
+}
+
 .version-term > div:first-of-type, .version-support-hours > div:first-of-type, .version-admin > div:first-of-type, .version-number > div:first-of-type{
 	float: left;
 	clear: both;

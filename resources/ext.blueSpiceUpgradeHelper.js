@@ -20,6 +20,8 @@
 		} ).done( function ( data ){
 			if(data.success){
 				console.log("upgrade process started");
+				$('.button-do-upgrade').hide();
+				$('.upgrade_status_element').show();
 			}else{
 				console.log("error while starting upgrade process");
 			}
