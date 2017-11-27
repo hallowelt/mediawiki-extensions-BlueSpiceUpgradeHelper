@@ -1,12 +1,12 @@
 {
 	"name": "BlueSpiceUpgradeHelper",
-	"version": "3.0.0-alpha",
+	"version": "2.27.2-univention.1",
 	"author": [
 		"Leonid Verhovskij"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:BlueSpiceUpgradeHelper",
 	"descriptionmsg": "bs-upgrade-helper-desc",
-	"license-name": "MIT",
+	"license-name": "GPL-3.0+",
 	"type": "other",
 	"ExtensionMessagesFiles": {
 		"BlueSpiceUpgradeHelperAlias": "BlueSpiceUpgradeHelper.i18n.alias.php"
@@ -27,7 +27,12 @@
 			"styles": [
 				"ext.blueSpiceUpgradeHelper.css"
 			],
-			"messages": [],
+			"messages": [
+				"bs-upgradehelper-token-check-result-ok",
+				"bs-upgradehelper-token-check-result-error",
+				"bs-upgradehelper-package-licensed-users-label",
+				"bs-upgradehelper-package-term-label"
+			],
 			"dependencies": []
 		},
 		"ext.blueSpiceUpgradeHelper.hint": {

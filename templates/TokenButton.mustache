@@ -1,17 +1,19 @@
 <div class="token-process" style="display:none;">
-	<h3>{{_ "bs-upgradehelper-tokenui-head"}}</h3>
-	<p>{{_ "bs-upgradehelper-tokenui-text"}}</p>
+	<span class="close-button"></span>
+	<p>{{_ "bs-upgradehelper-tokenui-text"}} (<a href="https://www.univention.com/products/univention-app-center/app-catalog/bluespice/" target="_blank">{{_ "bs-upgradehelper-tokenui-text-buy"}}</a>):</p>
 	<textarea id="token_input" rows="6"></textarea>
 	<div id="token_checkup_result" style="display:none;">
+		<span>{{_ "bs-upgradehelper-token-check-label" }}</span>: <span class="tocken_check_result"></span>
+
 	</div>
-	<button class="button-do-upgrade" style="display:none;">Make it so</button>
+	<div class="token_data"></div>
+	<button class="button-do-upgrade" style="display:none;">{{_ "bs-upgradehelper-do-upgrade-button-label" }}</button>
 	<h3 class="upgrade_status_element" style="display:none;">Upgrade Status</h3>
 	<ul id="upgrade_status" class="upgrade_status_element" style="display:none;">
 	</ul>
 	<h3 id="upgrade_complete" style="display:none;">Congratulation, the wiki have been upgraded.</h3>
 	<button type="button" id="reload_wiki" style="display:none;">reload wiki</button>
 	<h3 id="upgrade_error" style="display:none;">Sorry but something went wrong while upgrading the wiki.</h3>
-	<button type="button" id="close_token_input">close</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>

@@ -5,9 +5,8 @@
 	bottom: 0px;
 	left: 0px;
 	width: 100%;
-	background-color: #FFAE00;
-	border-top: 1px solid #b73a3a;
-	font-weight: bold;
+	background-color: #DCE7F2;
+	border-top: 1px solid #A4ADC5;
 	background-repeat: no-repeat;
 	background-position: 5px 5px;
 	display: none;
@@ -39,7 +38,7 @@
 }
 
 .upgrade-hint-button{
-	background-color: #4CAF50; /* Green */
+	background-color: #3E5389; /* Green */
     border: none;
     color: white;
     padding: 15px 32px;

@@ -38,30 +38,39 @@
 			taskData: JSON.stringify( { token: downloadToken } )
 		} ).done( function ( data ) {
 			console.log( data );
+			$('#token_checkup_result').show();
 			if(data.success === false){
-				$('#token_checkup_result').hide();
-				$('#token_checkup_result').empty();
+				$('.tocken_check_result').html( mw.message( 'bs-upgradehelper-token-check-result-error' ).text() );
+				$('.token_data').empty();
 				$(".button-do-upgrade").hide();
 				return;
 			}else{
+				$('.tocken_check_result').html( mw.message('bs-upgradehelper-token-check-result-ok' ).text() );
 				$(".button-do-upgrade").show();
 			}
 			myTemplate = mw.template.get( 'ext.blueSpiceUpgradeHelper.base', 'VersionOverviewSingle.mustache' );
 			templateData = {
 				package: data.payload.response_data.package_manifest.package,
-				versionCode: data.payload.response_data.package_manifest.versionCode,
+				versionName: data.payload.response_data.package_manifest.versionName,
 				package_limited: 0,
 				supportHours: 0,
-				adminUsername: mw.config.get( 'wgUserName' )
+				max_user: data.payload.token_data.max_user,
+				adminUsername: mw.config.get( 'wgUserName' ),
+				package_label: mw.message( 'bs-upgradehelper-package-term-label' ).text(),
+				licensedUsers_label: mw.message( 'bs-upgradehelper-package-licensed-users-label' ).text()
 			};
 			var html = myTemplate.render( templateData );
-			$('#token_checkup_result').empty();
-			$('#token_checkup_result').append(html).show();
+			$('.token_data').html(html);
 		} ).fail( function ( data, response ) {
 			console.log( data );
 			console.log( response );
 		} );
 
 	} );
-	$("#compare-bluespice").load("../extensions/BlueSpiceUpgradeHelper/webservices/versioncompare.php #main");
+	var sLang = mw.config.get("wgUserLanguage");
+	$("#compare-bluespice").load("../extensions/BlueSpiceUpgradeHelper/webservices/versioncompare.php?lang=" + sLang + " #main");
+
+	$(".close-button").click(function(){
+		$( '.token-process' ).hide();
+	});
 }( mediaWiki, jQuery ) );

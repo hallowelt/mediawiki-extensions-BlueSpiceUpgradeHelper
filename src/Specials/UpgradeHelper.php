@@ -70,6 +70,8 @@ class UpgradeHelper extends BsSpecialPage {
 	public function execute( $sub ) {
 		parent::execute( $sub );
 
+		global $bsgBlueSpiceExtInfo;
+
 		$templateParser = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\TemplateParser( __DIR__ . '/../../templates' );
 
 		$this->setHeaders();
@@ -86,12 +88,21 @@ class UpgradeHelper extends BsSpecialPage {
 		$currentVersionData[ 'package_limited' ] = (strpos( strtolower( $currentVersionData[ "package" ] ), "free" ) !== false) ? wfMessage( "bs-ugradehelper-unlimited" ) : wfMessage( "bs-ugradehelper-limited" );
 		$currentVersionData[ 'supportHours' ] = intval( $currentVersionData[ 'support_hours' ] );
 		$currentVersionData[ 'adminUsername' ] = $this->getUser()->getName();
+		$currentVersionData[ 'blueSpiceVersion' ] = $bsgBlueSpiceExtInfo['version'];
+		if(strpos( strtolower( $currentVersionData[ "package" ] ), "pro" ) !== false){
+			//licensedUsers, max_user
+			$currentVersionData[ 'licensedUsers' ] = $currentVersionData[ 'max_user' ];
+			//bs-upgradehelper-package-button-upgrade
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade-users");
+		}else{
+			$currentVersionData[ 'licensedUsers' ] = "unlimited";
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade");
+		}
 
 		$out->addHTML( $templateParser->processTemplate(
 			'VersionOverview', $currentVersionData
 		) );
 
-		$out->addHTML( \Html::element( "div", [ "id" => "compare-head" ], wfMessage( "bs-upgradehelper-compare-head-label" ) ) );
 		$out->addHTML( \Html::element( "div", [ "id" => "compare-bluespice" ] ) );
 
 		$out->addHTML( $templateParser->processTemplate(
