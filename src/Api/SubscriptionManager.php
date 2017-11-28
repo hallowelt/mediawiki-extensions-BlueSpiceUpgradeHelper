@@ -90,10 +90,12 @@ class SubscriptionManager extends \BSApiTasksBase {
 			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade_token_only.task";
 			file_put_contents( $upgradeTaskFilePath, "" );
 			unlink( $upgradeTaskFilePath );
+			$oReturn->payload['same_version'] = true;
 		} else {
 			//only trigger if version is different
 			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
 			file_put_contents( $upgradeTaskFilePath, "" );
+			$oReturn->payload['same_version'] = false;
 		}
 
 		$oReturn->success = true;
