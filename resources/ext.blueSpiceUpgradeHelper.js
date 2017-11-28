@@ -98,6 +98,7 @@
 				} ).done( function ( data ) {
 					if ( data.success ) {
 						console.log( "downgrade process started" );
+						//show progress here!
 					} else {
 						console.log( "error while starting downgrade process" );
 					}

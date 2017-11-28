@@ -82,11 +82,10 @@ class SubscriptionManager extends \BSApiTasksBase {
 		file_put_contents( $upgradeHelper->getTokenFilePath(), $oTaskData->token );
 
 		$oTokenCheck = $this->task_parsetoken( $oTaskData );
-		$upgradeHelper = new UpgradeHelper();
 		$manifestData = $upgradeHelper->getManifestData();
-		$rVersionName = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'versionName' ];
-		$rPackage = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'package' ];
-		$rSystem = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'system' ];
+		$rVersionName = $oTokenCheck->payload[ 'response_data' ]->package_manifest->versionName;
+		$rPackage = $oTokenCheck->payload[ 'response_data' ]->package_manifest->package;
+		$rSystem = $oTokenCheck->payload[ 'response_data' ]->package_manifest->system;
 		if ( $manifestData[ 'versionName' ] !== $rVersionName || $manifestData[ 'package' ] !== $rPackage || $manifestData[ 'system' ] !== $rSystem ) {
 			//only trigger if version is different
 			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
