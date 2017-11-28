@@ -24,7 +24,6 @@ class Main {
 	}
 
 	public static function onBeforePageDisplay( \OutputPage &$out, \Skin &$skin ) {
-		$out->addModules( "ext.blueSpiceUpgradeHelper.base" );
 
 		$bActive = \BsConfig::get(
 			self::$configNameHint

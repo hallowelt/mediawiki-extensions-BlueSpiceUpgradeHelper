@@ -78,6 +78,8 @@ class UpgradeHelper extends BsSpecialPage {
 
 		$out = $this->getOutput();
 
+		$out->addModules( "ext.blueSpiceUpgradeHelper.base" );
+
 		$currentVersionData = array_merge( $this->readManifestFile(), $this->readTokenData() );
 
 		if ( !isset( $currentVersionData[ 'support_hours' ] ) ) {
