@@ -88,15 +88,15 @@ class UpgradeHelper extends BsSpecialPage {
 		$currentVersionData[ 'package_limited' ] = (strpos( strtolower( $currentVersionData[ "package" ] ), "free" ) !== false) ? wfMessage( "bs-ugradehelper-unlimited" ) : wfMessage( "bs-ugradehelper-limited" );
 		$currentVersionData[ 'supportHours' ] = intval( $currentVersionData[ 'support_hours' ] );
 		$currentVersionData[ 'adminUsername' ] = $this->getUser()->getName();
-		$currentVersionData[ 'blueSpiceVersion' ] = $bsgBlueSpiceExtInfo['version'];
-		if(strpos( strtolower( $currentVersionData[ "package" ] ), "pro" ) !== false){
+		$currentVersionData[ 'blueSpiceVersion' ] = $bsgBlueSpiceExtInfo[ 'version' ];
+		if ( strpos( strtolower( $currentVersionData[ "package" ] ), "pro" ) !== false ) {
 			//licensedUsers, max_user
 			$currentVersionData[ 'licensedUsers' ] = $currentVersionData[ 'max_user' ];
 			//bs-upgradehelper-package-button-upgrade
-			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade-users");
-		}else{
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade-users" );
+		} else {
 			$currentVersionData[ 'licensedUsers' ] = "unlimited";
-			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade");
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade" );
 		}
 
 		$out->addHTML( $templateParser->processTemplate(
@@ -108,15 +108,17 @@ class UpgradeHelper extends BsSpecialPage {
 		$out->addHTML( $templateParser->processTemplate(
 			'TokenButton', $currentVersionData
 		) );
+
+		$out->enableOOUI();
 	}
 
-	static function readManifest() {
+	public static function readManifest() {
 		global $IP;
 		$filePath = $IP . "/BlueSpiceManifest.xml";
 		$arrRet = [];
 		if ( file_exists( $filePath ) ) {
 			$domDoc = new \DOMDocument;
-			$domDoc->load($filePath);
+			$domDoc->load( $filePath );
 			$domRoot = $domDoc->documentElement;
 			/*
 			  <manifest
@@ -132,17 +134,18 @@ class UpgradeHelper extends BsSpecialPage {
 			  solrLocation="/opt/bluespice"
 			  />
 			 */
-			$arrRet["versionCode"] = $domRoot->getAttribute("versionCode");
-			$arrRet["versionName"] = $domRoot->getAttribute("versionName");
-			$arrRet["repository"] = $domRoot->getAttribute("repository");
-			$arrRet["branch"] = $domRoot->getAttribute("branch");
-			$arrRet["package"] = $domRoot->getAttribute("package");
-			$arrRet["system"] = $domRoot->getAttribute("system");
-			$arrRet["installLocation"] = $domRoot->getAttribute("installLocation");
-			$arrRet["configLocation"] = $domRoot->getAttribute("configLocation");
-			$arrRet["dataLocation"] = $domRoot->getAttribute("dataLocation");
-			$arrRet["solrLocation"] = $domRoot->getAttribute("solrLocation");
+			$arrRet[ "versionCode" ] = $domRoot->getAttribute( "versionCode" );
+			$arrRet[ "versionName" ] = $domRoot->getAttribute( "versionName" );
+			$arrRet[ "repository" ] = $domRoot->getAttribute( "repository" );
+			$arrRet[ "branch" ] = $domRoot->getAttribute( "branch" );
+			$arrRet[ "package" ] = $domRoot->getAttribute( "package" );
+			$arrRet[ "system" ] = $domRoot->getAttribute( "system" );
+			$arrRet[ "installLocation" ] = $domRoot->getAttribute( "installLocation" );
+			$arrRet[ "configLocation" ] = $domRoot->getAttribute( "configLocation" );
+			$arrRet[ "dataLocation" ] = $domRoot->getAttribute( "dataLocation" );
+			$arrRet[ "solrLocation" ] = $domRoot->getAttribute( "solrLocation" );
 		}
+		return $arrRet;
 	}
 
 	static function base64url_encode( $data ) {

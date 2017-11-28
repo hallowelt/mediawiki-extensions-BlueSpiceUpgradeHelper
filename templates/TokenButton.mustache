@@ -8,35 +8,14 @@
 	</div>
 	<div class="token_data"></div>
 	<button class="button-do-upgrade" style="display:none;">{{_ "bs-upgradehelper-do-upgrade-button-label" }}</button>
-	<h3 class="upgrade_status_element" style="display:none;">Upgrade Status</h3>
-	<ul id="upgrade_status" class="upgrade_status_element" style="display:none;">
-	</ul>
-	<h3 id="upgrade_complete" style="display:none;">Congratulation, the wiki have been upgraded.</h3>
-	<button type="button" id="reload_wiki" style="display:none;">reload wiki</button>
-	<h3 id="upgrade_error" style="display:none;">Sorry but something went wrong while upgrading the wiki.</h3>
+	<div class="upgrade_status_element" style="display:none;">
+		<h3 class="upgrade_status_element" style="display:none;">Upgrade Status</h3>
+		<ul id="upgrade_status" class="upgrade_status_element" style="display:none;">
+		</ul>
+		<h3 id="upgrade_complete" style="display:none;">Congratulation, the wiki has been upgraded.</h3>
+		<button type="button" id="reload_wiki" style="display:none;">Reload Subscription Manager</button>
+		<h3 id="upgrade_error" style="display:none;">Sorry, something went wrong while upgrading the wiki.</h3>
+	</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-	$( function (  ) {
-		var getUrl = window.location;
-		const socket = io( 'http://' + getUrl.host + ':3000' );
-		var errorsOnUpgrade = false;
-		socket.on( 'upgradehelper statusupdate', function ( data ) {
-			$( '#upgrade_status' ).append( $( '<li>' ).text( data.message ) );
-			if(data.action === "created" && data.file.indexOf('.error') !== -1){
-				errorsOnUpgrade = true;
-			}
-			if(data.action === "deleted" && data.file === "upgrade.task" && !errorsOnUpgrade){
-				$('#upgrade_complete').show();
-				$('#reload_wiki').click(function(){
-					location.reload();
-				});
-				$('#reload_wiki').show();
-			}else if(data.action === "deleted" && data.file === "upgrade.task" && errorsOnUpgrade){
-				$('#upgrade_error').show();
-			}
-			//window.scrollTo( 0, document.body.scrollHeight );
-		} );
-	} );
-</script>

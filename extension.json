@@ -33,7 +33,10 @@
 				"bs-upgradehelper-package-licensed-users-label",
 				"bs-upgradehelper-package-term-label"
 			],
-			"dependencies": []
+			"dependencies": [
+				"oojs-ui-core",
+				"oojs-ui-windows"
+			]
 		},
 		"ext.blueSpiceUpgradeHelper.hint": {
 			"scripts": [

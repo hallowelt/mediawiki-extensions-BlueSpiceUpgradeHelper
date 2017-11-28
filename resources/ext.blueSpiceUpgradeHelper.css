@@ -1,3 +1,5 @@
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.css');
+
 h3.upgrade_status_element{
 	margin-top:  80px;
 }
@@ -156,4 +158,12 @@ h3.upgrade_status_element{
 .close-button:before{
   font-family: "fontawesome" !important;
   content: "\f00d";
+}
+
+.version-button-resign-handler .oo-ui-labelElement-label{
+	color: maroon;
+}
+
+.version-button-upgrade-handler .oo-ui-labelElement-label{
+	color: olivedrab;
 }

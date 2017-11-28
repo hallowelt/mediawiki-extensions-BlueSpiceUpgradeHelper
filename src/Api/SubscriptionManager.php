@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Api;
 
 use Lcobucci\JWT\Parser;
 use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
+use MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper;
 
 class SubscriptionManager extends \BSApiTasksBase {
 
@@ -58,7 +59,7 @@ class SubscriptionManager extends \BSApiTasksBase {
 		return $oReturn;
 	}
 
-	protected function task_triggerDowngrade( ) {
+	protected function task_triggerDowngrade() {
 		$oReturn = $this->makeStandardReturn();
 
 		$downgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "downgrade.task";
@@ -80,8 +81,21 @@ class SubscriptionManager extends \BSApiTasksBase {
 		$upgradeHelper = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper();
 		file_put_contents( $upgradeHelper->getTokenFilePath(), $oTaskData->token );
 
-		$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
-		file_put_contents( $upgradeTaskFilePath, "" );
+		$oTokenCheck = $this->task_parsetoken( $oTaskData );
+		$upgradeHelper = new UpgradeHelper();
+		$manifestData = $upgradeHelper->getManifestData();
+		$rVersionName = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'versionName' ];
+		$rPackage = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'package' ];
+		$rSystem = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'system' ];
+		if ( $manifestData[ 'versionName' ] !== $rVersionName || $manifestData[ 'package' ] !== $rPackage || $manifestData[ 'system' ] !== $rSystem ) {
+			//only trigger if version is different
+			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
+			file_put_contents( $upgradeTaskFilePath, "" );
+		} else {
+			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade_token_only.task";
+			file_put_contents( $upgradeTaskFilePath, "" );
+			unlink( $upgradeTaskFilePath );
+		}
 
 		$oReturn->success = true;
 		return $oReturn;
