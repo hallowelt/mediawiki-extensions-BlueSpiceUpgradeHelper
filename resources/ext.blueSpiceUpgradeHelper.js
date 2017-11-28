@@ -44,7 +44,7 @@
 
 	var titleLogin = new mw.Title( 'Userlogin', -1 );
 	$( '#reload_wiki' ).click( function () {
-		window.location.href = titleLogin.getUrl( { redirect: 'Special:SubscriptionManager' } );
+		window.location.href = titleLogin.getUrl( { returnto: 'Special:SubscriptionManager' } );
 	} );
 
 	var getUrl = window.location;
