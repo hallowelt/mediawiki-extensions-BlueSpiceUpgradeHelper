@@ -7,12 +7,10 @@
  * @ingroup Extensions
  */
 
-namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials;
+namespace BlueSpice\UpgradeHelper\Special;
 
-use HTMLForm;
 use BsSpecialPage;
 use Lcobucci\JWT\Parser;
-use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
 
 class UpgradeHelper extends BsSpecialPage {
 
@@ -34,7 +32,7 @@ class UpgradeHelper extends BsSpecialPage {
 
 	public function __construct() {
 		$this->filePath = self::tokenFilePath();
-		parent::__construct( 'SubscriptionManager', Hooks\Main::$permissionViewSpecial );
+		parent::__construct( 'SubscriptionManager', 'bluespice-upgradehelper-viewspecialpage' );
 	}
 
 	public function getTokenFilePath() {
@@ -50,8 +48,8 @@ class UpgradeHelper extends BsSpecialPage {
 		}
 	}
 
-	static function tokenFilePath() {
-		//$BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE
+	public static function tokenFilePath() {
+		// $BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE
 		if ( empty( getenv( 'BLUESPICE_CONFIG_PATH' ) ) ||
 		  empty( getenv( 'BLUESPICE_PRO_KEY_FILE' ) ) ) {
 
@@ -70,9 +68,9 @@ class UpgradeHelper extends BsSpecialPage {
 	public function execute( $sub ) {
 		parent::execute( $sub );
 
-		global $bsgBlueSpiceExtInfo;
-
-		$templateParser = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\TemplateParser( __DIR__ . '/../../templates' );
+		$templateParser = new \BlueSpice\UpgradeHelper\TemplateParser(
+			__DIR__ . '/../../templates'
+		);
 
 		$this->setHeaders();
 
@@ -86,19 +84,24 @@ class UpgradeHelper extends BsSpecialPage {
 			$currentVersionData[ 'support_hours' ] = "";
 		}
 
-		//package_description
-		$currentVersionData[ 'package_limited' ] = (strpos( strtolower( $currentVersionData[ "package" ] ), "free" ) !== false) ? wfMessage( "bs-ugradehelper-unlimited" ) : wfMessage( "bs-ugradehelper-limited" );
+		// package_description
+		$currentVersionData[ 'package_limited' ]
+			= strpos( strtolower( $currentVersionData[ "package" ] ), "free" ) !== false
+				? wfMessage( "bs-ugradehelper-unlimited" )
+				: wfMessage( "bs-ugradehelper-limited" );
 		$currentVersionData[ 'supportHours' ] = intval( $currentVersionData[ 'support_hours' ] );
 		$currentVersionData[ 'adminUsername' ] = $this->getUser()->getName();
-		$currentVersionData[ 'blueSpiceVersion' ] = $bsgBlueSpiceExtInfo[ 'version' ];
+		$currentVersionData[ 'blueSpiceVersion' ] = $this->getConfig( 'BlueSpiceExtInfo' )[ 'version' ];
 		if ( strpos( strtolower( $currentVersionData[ "package" ] ), "pro" ) !== false ) {
-			//licensedUsers, max_user
+			// licensedUsers, max_user
 			$currentVersionData[ 'licensedUsers' ] = $currentVersionData[ 'max_user' ];
-			//bs-upgradehelper-package-button-upgrade
-			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade-users" );
+			// bs-upgradehelper-package-button-upgrade
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ]
+				= wfMessage( "bs-upgradehelper-package-button-upgrade-users" );
 		} else {
 			$currentVersionData[ 'licensedUsers' ] = "unlimited";
-			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ] = wfMessage( "bs-upgradehelper-package-button-upgrade" );
+			$currentVersionData[ 'bs-upgradehelper-package-button-upgrade' ]
+				= wfMessage( "bs-upgradehelper-package-button-upgrade" );
 		}
 
 		$out->addHTML( $templateParser->processTemplate(
@@ -115,8 +118,7 @@ class UpgradeHelper extends BsSpecialPage {
 	}
 
 	public static function readManifest() {
-		global $IP;
-		$filePath = $IP . "/BlueSpiceManifest.xml";
+		$filePath = \RequestContext::getMain()->getConfig()->get( 'IP' ) . "/BlueSpiceManifest.xml";
 		$arrRet = [];
 		if ( file_exists( $filePath ) ) {
 			$domDoc = new \DOMDocument;
@@ -150,15 +152,22 @@ class UpgradeHelper extends BsSpecialPage {
 		return $arrRet;
 	}
 
-	static function base64url_encode( $data ) {
+	// phpcs:ignore MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+	public static function base64url_encode( $data ) {
 		return rtrim( strtr( base64_encode( $data ), '+/', '-_' ), '=' );
 	}
 
-	static function base64url_decode( $data ) {
-		return base64_decode( str_pad( strtr( $data, '-_', '+/' ), strlen( $data ) % 4, '=', STR_PAD_RIGHT ) );
+	// phpcs:ignore MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+	public static function base64url_decode( $data ) {
+		return base64_decode( str_pad(
+			strtr( $data, '-_', '+/' ),
+			strlen( $data ) % 4,
+			'=',
+			STR_PAD_RIGHT
+		) );
 	}
 
-	static function validateTokenField( $bsUpgradeTokenField, $allData = null ) {
+	public static function validateTokenField( $bsUpgradeTokenField, $allData = null ) {
 		if ( !is_string( $bsUpgradeTokenField ) ) {
 			return "token is empty";
 		}
@@ -177,26 +186,27 @@ class UpgradeHelper extends BsSpecialPage {
 		return true;
 	}
 
-	static function processInput( $formData ) {
+	public static function processInput( $formData ) {
 		if ( !empty( $formData[ "upgrade" ] ) && $formData[ "upgrade" ] ) {
 			$upgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
 			if ( file_exists( $upgradeFilePath ) ) {
 				unlink( $upgradeFilePath );
 			}
 			file_put_contents( $upgradeFilePath, "" );
-		} else if ( !empty( $formData[ "downgrade" ] ) && $formData[ "downgrade" ] ) {
+		} elseif ( !empty( $formData[ "downgrade" ] ) && $formData[ "downgrade" ] ) {
 			$downgradeFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "downgrade.task";
 			if ( file_exists( $downgradeFilePath ) ) {
 				unlink( $downgradeFilePath );
 			}
 			file_put_contents( $downgradeFilePath, "" );
-		} else if ( !empty( $formData[ "save_token" ] ) && $formData[ "save_token" ] && !empty( $formData[ 'bsUpgradeTokenField' ] ) ) {
+		} elseif ( !empty( $formData[ "save_token" ] ) && $formData[ "save_token" ]
+			&& !empty( $formData[ 'bsUpgradeTokenField' ] ) ) {
 
 			file_put_contents( self::tokenFilePath(), $formData[ 'bsUpgradeTokenField' ] );
 		}
 
-		global $wgOut, $wgTitle;
-		$wgOut->redirect( $wgTitle->getFullUrl() );
+		$context = \RequestContext::getMain();
+		$context->getOutput()->redirect( $context->getTitle()->getFullUrl() );
 		return false;
 	}
 
@@ -205,8 +215,7 @@ class UpgradeHelper extends BsSpecialPage {
 	}
 
 	protected function getDefaultManifestPath() {
-		global $IP;
-		return $IP . "/BlueSpiceManifest.xml";
+		return $this->getConfig()->get( 'IP' ) . "/BlueSpiceManifest.xml";
 	}
 
 	protected function readManifestFile( $path = null ) {
@@ -237,8 +246,9 @@ class UpgradeHelper extends BsSpecialPage {
 			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
 				return false;
 			}
-			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
-				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			if ( is_array( $required ) && isset( $required[ "convert" ] )
+				&& $required[ "convert" ] == "exists if yes" ) {
+				$domRoot->getAttribute( $attribute ) == "yes" ? $aReturn[ $attribute ] = true : "";
 			} else {
 				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
 			}
@@ -246,14 +256,15 @@ class UpgradeHelper extends BsSpecialPage {
 		return $aReturn;
 	}
 
-	public static function parseToken( $domRoot ) {
+	public function parseToken( $domRoot ) {
 		$aReturn = [];
 		foreach ( $this->manifestAttributes as $attribute => $required ) {
 			if ( !$domRoot->hasAttribute( $attribute ) && $required === true ) {
 				return false;
 			}
-			if ( is_array( $required ) && isset( $required[ "convert" ] ) && $required[ "convert" ] == "exists if yes" ) {
-				($domRoot->getAttribute( $attribute ) == "yes") ? $aReturn[ $attribute ] = true : "";
+			if ( is_array( $required ) && isset( $required[ "convert" ] )
+				&& $required[ "convert" ] == "exists if yes" ) {
+				$domRoot->getAttribute( $attribute ) == "yes" ? $aReturn[ $attribute ] = true : "";
 			} else {
 				$aReturn[ $attribute ] = $domRoot->getAttribute( $attribute );
 			}
@@ -265,7 +276,8 @@ class UpgradeHelper extends BsSpecialPage {
 		$arrRet = [];
 		if ( file_exists( $this->filePath ) ) {
 			try {
-				$token = (new Parser() )->parse( ( string ) file_get_contents( $this->filePath ) ); // Parses from a string
+				// Parses from a string
+				$token = ( new Parser() )->parse( (string)file_get_contents( $this->filePath ) );
 
 				$arrRet[ "nbf" ] = date( 'd.m.Y', $token->getClaim( 'nbf' ) );
 				$arrRet[ "exp" ] = date( 'd.m.Y', $token->getClaim( 'exp' ) );

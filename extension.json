@@ -1,15 +1,50 @@
 {
 	"name": "BlueSpiceUpgradeHelper",
-	"version": "2.27.2-univention.1",
+	"version": "3.1",
 	"author": [
-		"Leonid Verhovskij"
+		"Leonid Verhovskij",
+		"Patric Wirth"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:BlueSpiceUpgradeHelper",
 	"descriptionmsg": "bs-upgrade-helper-desc",
-	"license-name": "GPL-3.0+",
-	"type": "other",
+	"license-name": "GPL-3.0-only",
+	"type": "bluespice",
+	"requires": {
+		"MediaWiki": ">= 1.31.0",
+		"extensions": {
+			"BlueSpiceFoundation": ">= 3.1"
+		}
+	},
+	"attributes": {
+		"BlueSpiceFoundation": {
+			"Extensions": {
+				"BlueSpiceUpgradeHelper": {
+					"className": "\\BlueSpice\\UpgradeHelper\\Extension",
+					"extPath": "/BlueSpiceUpgradeHelper",
+					"configDefinitions": {
+						"UpgradeHelperShowHint": "\\BlueSpice\\UpgradeHelper\\ConfigDefinition\\ShowHint::getInstance"
+					}
+				}
+			},
+			"PermissionRegistry": {
+				"bluespice-upgradehelper-viewspecialpage": {
+					"type": "global",
+					"roles": [
+						"admin",
+						"maintenanceadmin"
+					]
+				}
+			},
+			"AdminToolRegistry": {
+				"bs-upgradehelper-manager": "\\BlueSpice\\UpgradeHelper\\AdminTool"
+			},
+			"AlertProviderRegistry": {
+				"bs-upgradehint": "\\BlueSpice\\UpgradeHelper\\AlertProvider\\UpgradeHint::factory"
+			}
+		}
+	},
 	"ExtensionMessagesFiles": {
-		"BlueSpiceUpgradeHelperAlias": "BlueSpiceUpgradeHelper.i18n.alias.php"
+		"BlueSpiceUpgradeHelperAlias": "languages/BlueSpiceUpgradeHelper.alias.php"
 	},
 	"MessagesDirs": {
 		"BlueSpiceUpgradeHelper": [
@@ -19,7 +54,7 @@
 	"ResourceModules": {
 		"ext.blueSpiceUpgradeHelper.base": {
 			"templates": {
-				"VersionOverviewSingle.mustache": "../templates/VersionOverviewSingle.mustache"
+				"VersionOverviewSingle.mustache": "../resources/templates/VersionOverviewSingle.mustache"
 			},
 			"scripts": [
 				"ext.blueSpiceUpgradeHelper.js"
@@ -46,18 +81,42 @@
 				"ext.blueSpiceUpgradeHelper.hint.css"
 			],
 			"messages": [],
-			"dependencies": []
+			"dependencies": [
+				"ext.bluespice"
+			]
 		}
 	},
-	"callback": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onRegistration",
+	"AutoloadNamespaces": {
+		"BlueSpice\\UpgradeHelper\\" : "src/"
+	},
 	"Hooks": {
-		"BSWikiAdminMenuItems": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBSWikiAdminMenuItems",
-		"BeforePageDisplay": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onBeforePageDisplay",
-		"SkinAfterContent": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Hooks\\Main::onSkinAfterContent"
+		"BeforePageDisplay": "\\BlueSpice\\UpgradeHelper\\Hook\\BeforePageDisplay\\AddResources::callback",
+		"BSUserSidebarGlobalActionsWidgetGlobalActions": "\\BlueSpice\\UpgradeHelper\\Extension::onBSUserSidebarGlobalActionsWidgetGlobalActions"
 	},
 	"GroupPermissions": {
+		"*": {
+			"bluespice-upgradehelper-viewspecialpage": false
+		},
+		"user": {
+			"bluespice-upgradehelper-viewspecialpage": false
+		},
 		"sysop": {
 			"bluespice-upgradehelper-viewspecialpage": true
+		}
+	},
+	"AvailableRights": [
+		"bluespice-upgradehelper-viewspecialpage"
+	],
+	"config": {
+		"UpgradeHelperShowHint": {
+			"value": [
+				true
+			]
+		},
+		"UpgradeHelperShowMenuLinks": {
+			"value": [
+				true
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -65,11 +124,11 @@
 		"remoteExtPath": "BlueSpiceUpgradeHelper/resources"
 	},
 	"SpecialPages": {
-		"SubscriptionManager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Specials\\UpgradeHelper"
+		"SubscriptionManager": "BlueSpice\\UpgradeHelper\\Specials\\UpgradeHelper"
 	},
 	"APIModules": {
-		"bs-subscription-manager": "MediaWiki\\Extension\\BlueSpiceUpgradeHelper\\Api\\SubscriptionManager"
+		"bs-subscription-manager": "BlueSpice\\UpgradeHelper\\Api\\SubscriptionManager"
 	},
-	"load_composer_autoloader": true,
-	"manifest_version": 1
+	"manifest_version": 2,
+	"load_composer_autoloader": true
 }

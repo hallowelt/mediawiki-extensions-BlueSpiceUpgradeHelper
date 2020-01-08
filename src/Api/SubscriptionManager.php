@@ -1,15 +1,15 @@
 <?php
 
-namespace MediaWiki\Extension\BlueSpiceUpgradeHelper\Api;
+namespace BlueSpice\UpgradeHelper\Api;
 
 use Lcobucci\JWT\Parser;
-use MediaWiki\Extension\BlueSpiceUpgradeHelper\Hooks;
-use MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper;
+use BlueSpice\UpgradeHelper\Hooks;
+use BlueSpice\UpgradeHelper\Specials\UpgradeHelper;
 
-class SubscriptionManager extends \BSApiTasksBase {
+class SubscriptionManager extends \BlueSpice\Api\Task {
 
 	protected $url = 'https://selfservice.bluespice.com/frontend/info/';
-	protected $aTasks = array(
+	protected $aTasks = [
 		'parsetoken' => [
 			'examples' => [
 				[
@@ -40,15 +40,15 @@ class SubscriptionManager extends \BSApiTasksBase {
 		],
 		'triggerDowngrade' => [],
 		'disableHint' => []
-	);
+	];
 
 	protected function getRequiredTaskPermissions() {
-		return array(
-			'parsetoken' => array( Hooks\Main::$permissionViewSpecial ),
-			'triggerUpgrade' => array( Hooks\Main::$permissionViewSpecial ),
-			'triggerDowngrade' => array( Hooks\Main::$permissionViewSpecial ),
-			'disableHint' => array( 'wikiadmin' )
-		);
+		return [
+			'parsetoken' => [ 'bluespice-upgradehelper-viewspecialpage' ],
+			'triggerUpgrade' => [ 'bluespice-upgradehelper-viewspecialpage' ],
+			'triggerDowngrade' => [ 'bluespice-upgradehelper-viewspecialpage' ],
+			'disableHint' => [ 'wikiadmin' ]
+		];
 	}
 
 	protected function task_disableHint() {
@@ -77,8 +77,8 @@ class SubscriptionManager extends \BSApiTasksBase {
 			return $oResponse;
 		}
 
-		//$oTaskData->token
-		$upgradeHelper = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper();
+		// $oTaskData->token
+		$upgradeHelper = new \BlueSpice\UpgradeHelper\Specials\UpgradeHelper();
 		file_put_contents( $upgradeHelper->getTokenFilePath(), $oTaskData->token );
 
 		$oTokenCheck = $this->task_parsetoken( $oTaskData );
@@ -87,8 +87,10 @@ class SubscriptionManager extends \BSApiTasksBase {
 		$rVersionName = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'versionName' ];
 		$rPackage = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'package' ];
 		$rSystem = $oResponse->payload[ 'response_data' ][ 'package_manifest' ][ 'system' ];
-		if ( $manifestData[ 'versionName' ] !== $rVersionName || $manifestData[ 'package' ] !== $rPackage || $manifestData[ 'system' ] !== $rSystem ) {
-			//only trigger if version is different
+		if ( $manifestData[ 'versionName' ] !== $rVersionName
+			|| $manifestData[ 'package' ] !== $rPackage
+			|| $manifestData[ 'system' ] !== $rSystem ) {
+			// only trigger if version is different
 			$upgradeTaskFilePath = getenv( 'BLUESPICE_CONFIG_PATH' ) . "/" . "upgrade.task";
 			file_put_contents( $upgradeTaskFilePath, "" );
 		} else {
@@ -124,18 +126,19 @@ class SubscriptionManager extends \BSApiTasksBase {
 			$oResponse->success = false;
 		}
 
-
 		return $oResponse;
 	}
 
 	protected function getUrl() {
-		$upgradeHelper = new \MediaWiki\Extension\BlueSpiceUpgradeHelper\Specials\UpgradeHelper();
+		$upgradeHelper = new \BlueSpice\UpgradeHelper\Specials\UpgradeHelper();
 		$manifestData = $upgradeHelper->getManifestData();
-		return $this->url . $manifestData[ "system" ] . "/" . trim( $manifestData[ "branch" ], "_" . $manifestData[ "system" ] ) . "/" . "bluespice.zip";
+		return $this->url . $manifestData[ "system" ] . "/"
+			. trim( $manifestData[ "branch" ], "_" . $manifestData[ "system" ] )
+			. "/" . "bluespice.zip";
 	}
 
 	protected function parseToken( $sToken ) {
-		$token = (new Parser() )->parse( ( string ) $sToken ); // Parses from a string
+		$token = ( new Parser() )->parse( (string)$sToken ); // Parses from a string
 
 		return $token->getClaims();
 	}
