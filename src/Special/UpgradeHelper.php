@@ -69,7 +69,7 @@ class UpgradeHelper extends BsSpecialPage {
 		parent::execute( $sub );
 
 		$templateParser = new \BlueSpice\UpgradeHelper\TemplateParser(
-			__DIR__ . '/../../templates'
+			__DIR__ . '/../../resources/templates'
 		);
 
 		$this->setHeaders();
@@ -91,7 +91,7 @@ class UpgradeHelper extends BsSpecialPage {
 				: wfMessage( "bs-ugradehelper-limited" );
 		$currentVersionData[ 'supportHours' ] = intval( $currentVersionData[ 'support_hours' ] );
 		$currentVersionData[ 'adminUsername' ] = $this->getUser()->getName();
-		$currentVersionData[ 'blueSpiceVersion' ] = $this->getConfig( 'BlueSpiceExtInfo' )[ 'version' ];
+		$currentVersionData[ 'blueSpiceVersion' ] = $this->getConfig()->get( 'BlueSpiceExtInfo' )[ 'version' ];
 		if ( strpos( strtolower( $currentVersionData[ "package" ] ), "pro" ) !== false ) {
 			// licensedUsers, max_user
 			$currentVersionData[ 'licensedUsers' ] = $currentVersionData[ 'max_user' ];
@@ -118,7 +118,7 @@ class UpgradeHelper extends BsSpecialPage {
 	}
 
 	public static function readManifest() {
-		$filePath = \RequestContext::getMain()->getConfig()->get( 'IP' ) . "/BlueSpiceManifest.xml";
+		$filePath = $GLOBALS['IP'] . "/BlueSpiceManifest.xml";
 		$arrRet = [];
 		if ( file_exists( $filePath ) ) {
 			$domDoc = new \DOMDocument;
@@ -215,7 +215,7 @@ class UpgradeHelper extends BsSpecialPage {
 	}
 
 	protected function getDefaultManifestPath() {
-		return $this->getConfig()->get( 'IP' ) . "/BlueSpiceManifest.xml";
+		return $GLOBALS['IP'] . "/BlueSpiceManifest.xml";
 	}
 
 	protected function readManifestFile( $path = null ) {

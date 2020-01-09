@@ -124,7 +124,7 @@
 		"remoteExtPath": "BlueSpiceUpgradeHelper/resources"
 	},
 	"SpecialPages": {
-		"SubscriptionManager": "BlueSpice\\UpgradeHelper\\Specials\\UpgradeHelper"
+		"SubscriptionManager": "BlueSpice\\UpgradeHelper\\Special\\UpgradeHelper"
 	},
 	"APIModules": {
 		"bs-subscription-manager": "BlueSpice\\UpgradeHelper\\Api\\SubscriptionManager"
